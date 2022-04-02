@@ -6,4 +6,4 @@
 * 请勿传播
 
 ### 拉库：  
-ql repo https://github.com/LordlessCamelot/Kiara.git "jd_|jx_|jdCookie" "activity|backUp" "^jd[^_]|USER|magic|utils|function|sign|sendNotify|ql|JDJR"
+ql repo https://github.com/LordlessCamelot/Kiara.git "jd_|jx_" "activity|backUp" "^jd[^_]|USER|jdCookie|magic|utils|function|sign|sendNotify|ql|JDJR"
