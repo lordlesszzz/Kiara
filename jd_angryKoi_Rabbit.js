@@ -12,7 +12,7 @@ export  KOI_FAIR_MODE="true"
 #其他变量
 export kois ="pt_pin@pt_pin@pt_pin" 指定车头pin
 export PROXY_URL ="" ip代理api
-export gua_cleancart_PandaToken = ''
+export Rabbit_Url =""
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
@@ -26,7 +26,7 @@ cron "30 0,8  * * *" script-path=https://raw.githubusercontent.com/LingFeng0918/
 ====================================小火箭=============================
 愤怒的锦鲤 = type=cron,script-path=https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi.js, cronexpr="30 0,8  * * *", timeout=3600, enable=true
  */
-const $ = new Env("愤怒的锦鲤-PandaToken版")
+const $ = new Env("愤怒的锦鲤-Rabbit接口版")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
@@ -35,13 +35,8 @@ let fair_mode = process.env.KOI_FAIR_MODE == "true" ? true : false
 let chetou_number = process.env.KOI_CHETOU_NUMBER ? Number(process.env.KOI_CHETOU_NUMBER) : 0
 var kois = process.env.kois ?? ""
 let proxyUrl = process.env.PROXY_URL ?? ""; // 代理的api地址
+let RabbitUrl = process.env.Rabbit_Url ?? ""; // logurl
 let proxy = "";
-let jdPandaToken = '';
-jdPandaToken = $.isNode() ? (process.env.gua_cleancart_PandaToken ? process.env.gua_cleancart_PandaToken : `${jdPandaToken}`) : ($.getdata('gua_cleancart_PandaToken') ? $.getdata('gua_cleancart_PandaToken') : `${jdPandaToken}`);
-if (!jdPandaToken) {
-    console.log('请填写Panda获取的Token,变量是gua_cleancart_PandaToken');
-    return;
-}
 let nums = 0;
 let cookiesArr = []
 let scriptsLogArr = []
@@ -533,30 +528,25 @@ function getJinliLogs() {
     var logs = '';
     return new Promise((resolve) => {
         let url = {
-            url: "https://api.jds.codes/jd/log",
+            url:`${RabbitUrl}`,
             followRedirect: false,
-            headers: {
-                'Accept': '*/*',
-                "accept-encoding": "gzip, deflate, br",
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + jdPandaToken
-            },
             timeout: 30000
         }
         $.get(url, async(err, resp, data) => {
             try {
                 data = JSON.parse(data);
-                if (data && data.code == 200) {
+                if (data && data.status == 0) {
                     lnrequesttimes = data.request_times;
-                    console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
-                    if (data.data)
-                        logs = data.data || '';
+                        logs = {
+                            random: data.random,
+                            log: data.log
+                        }
                     if (logs != '')
                         resolve(logs);
                     else
-                        console.log("签名获取失败,可能Token使用次数上限或被封.");
+                        console.log("log获取失败.");
                 } else {
-                    console.log("签名获取失败.");
+                    console.log("log获取失败.");
                 }
 
             }catch (e) {
