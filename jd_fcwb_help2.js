@@ -9,7 +9,7 @@ author: feverrun
 先自己点两下活动 》 再运行助力  》 最后手动开格子
 不设置定时，随机定时
  */
-const $ = new Env('发财挖宝互助');
+const $ = new Env('发财挖宝-助力版');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 const JD_API_HOST = 'https://api.m.jd.com';
