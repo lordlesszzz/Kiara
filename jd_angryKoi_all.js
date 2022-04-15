@@ -27,7 +27,7 @@ cron "30 0,8  * * *" script-path=https://raw.githubusercontent.com/LingFeng0918/
 ====================================小火箭=============================
 愤怒的锦鲤 = type=cron,script-path=https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi_all.js, cronexpr="30 0,8  * * *", timeout=3600, enable=true
  */
-const $ = new Env("愤怒的锦鲤多接口版")
+const $ = new Env("愤怒的锦鲤-多接口版")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
