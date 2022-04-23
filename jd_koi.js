@@ -15,9 +15,11 @@ JD_KOI_LOG="log1&log2&log3"     非必须 抓包获取的日志  例如  "164648
 JD_KOI_OPENRED="" 非必须 自动开红包。若不想自动开红包 JD_KOI_OPENRED  设置为 false
 JD_KOI_CODE=""    非必须 未设置默认助力第一个号 例如 "438721140" 如果设置助力满指定码则退出，不会自动开红包。
 
-一般一天只需执行一次 不需要指定定时
+[task_local]
+#锦鲤红包
+5 0 * * * jd_koi.js, tag=锦鲤红包
 */
-const $ = new Env("锦鲤红包互助");
+const $ = new Env("锦鲤红包");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let notify = $.isNode() ? require('./sendNotify') : '';
