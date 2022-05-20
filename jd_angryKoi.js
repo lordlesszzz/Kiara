@@ -6,7 +6,7 @@
 
 LingFeng魔改版
 
-改用以下变量
+变量
 #雨露均沾，若配置，则车头外的ck随机顺序，这样可以等概率的随到前面来
 export  KOI_FAIR_MODE="true"
 #其他变量
@@ -14,20 +14,21 @@ export kois ="pt_pin@pt_pin@pt_pin" 指定车头pin
 export KOI_LOG_URL ="" 锦鲤log api
 export KOI_LOG_NUMS ="" 获取锦鲤数量 默认100
 export PROXY_URL ="" ip代理api
+
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
 #愤怒的锦鲤
-30 0,8 * * * https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi.js, tag=愤怒的锦鲤, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+30 0,8 * * * jd_angryKoi.js, tag=愤怒的锦鲤, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 =================================Loon===================================
 [Script]
-cron "30 0,8  * * *" script-path=https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi.js,tag=愤怒的锦鲤
+cron "30 0,8  * * *" script-path=jd_angryKoi.js,tag=愤怒的锦鲤
 ===================================Surge================================
-愤怒的锦鲤 = type=cron,cronexp="30 0,8  * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi.js
+愤怒的锦鲤 = type=cron,cronexp="30 0,8  * * *",wake-system=1,timeout=3600,script-path=jd_angryKoi.js
 ====================================小火箭=============================
-愤怒的锦鲤 = type=cron,script-path=https://raw.githubusercontent.com/LingFeng0918/LF_JD/main/jd_angryKoi.js, cronexpr="30 0,8  * * *", timeout=3600, enable=true
+愤怒的锦鲤 = type=cron,script-path=jd_angryKoi.js, cronexpr="30 0,8  * * *", timeout=3600, enable=true
  */
-const $ = new Env("愤怒的锦鲤-log版")
+const $ = new Env("愤怒的锦鲤")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
