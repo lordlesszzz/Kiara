@@ -12,7 +12,7 @@ export  KOI_FAIR_MODE="true"
 #其他变量
 export kois ="pt_pin@pt_pin@pt_pin" 指定车头pin
 export KOI_LOG_URL ="" 锦鲤log api
-export KOI_LOG_NUMS ="" 获取锦鲤数量 默认100
+export KOI_LOG_NUMS ="" 获取锦鲤log数量 默认100
 export PROXY_URL ="" ip代理api
 
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
@@ -61,7 +61,7 @@ let notify, allMessage = '';
     scriptsLogArr = [...(res || []), ...scriptsLogArr]
     console.log(`共${scriptsLogArr.length}个助力logn`)
     if (scriptsLogArr.length == 0){
-        console.log(`LingFeng提醒: log为空,脚本停止运行！`)
+        console.log(`提醒：log为空,脚本停止运行！`)
         return
     }
     console.log(`\n 锦鲤红包助力log需要手动抓取 \n`)
@@ -521,7 +521,7 @@ async function requireConfig() {
     return new Promise(resolve => {
         notify = $.isNode() ? require('./sendNotify') : '';
         const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-        const scriptsLog = $.isNode() ? require('./ql_jlhb_log.js') : '';
+        const scriptsLog = $.isNode() ? require('./jinli_log.js') : '';
         if ($.isNode()) {
             Object.keys(jdCookieNode).forEach((item) => {
                 if (jdCookieNode[item]) {
