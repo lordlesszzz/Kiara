@@ -12,7 +12,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let allMessage = '';
 let myMap = new Map();
 let allBean = 0;
-const {getEnvByPtPin} = require('./ql');
+const {getEnvByPtPin} = require('./function/ql');
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
