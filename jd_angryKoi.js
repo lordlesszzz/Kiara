@@ -28,6 +28,7 @@ cron "30 0,8  * * *" script-path=jd_angryKoi.js,tag=愤怒的锦鲤
 ====================================小火箭=============================
 愤怒的锦鲤 = type=cron,script-path=jd_angryKoi.js, cronexpr="30 0,8  * * *", timeout=3600, enable=true
  */
+ 
 const $ = new Env("愤怒的锦鲤")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
