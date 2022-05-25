@@ -1,3 +1,10 @@
+/*
+变量设置 totalNum=邀请人数
+如 totalNum=40
+22 0 * * * jd_fcwb_help3.js
+*/
+
+
 const $ = new Env('搞鸡玩家-发财挖宝助力修复版');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -5,6 +12,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const JD_API_HOST = 'https://api.m.jd.com';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
+let totalNum= $.isNode() ? (process.env.totalNum ? process.env.totalNum : "") : ($.getdata('totalNum') ? $.getdata('totalNum') : "")
 $.appId = '8dd95';
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
@@ -69,8 +77,8 @@ await home()
         
     }
     await List(cookiesArr[0])
-    if(totalNum==40){
-        $.log('账号1邀请人数已达40自动停止')
+    if(total==totalNum){
+        $.log('账号1邀请人数已达'+totalNum+'自动停止')
         break
     }
 }
@@ -140,8 +148,8 @@ function List(ck) {
           if (safeGet(data)) {
             data = JSON.parse(data);
              if(data.success==true){
-                 totalNum = data.data.helpList.totalNum
-$.log('邀请人数：'+totalNum)
+                 total = data.data.helpList.totalNum
+$.log('邀请人数：'+total)
                  
              }else if(data.success==false){
              //console.log('黑号 快去买吧')
