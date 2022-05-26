@@ -382,8 +382,8 @@ def main():
     for e,cookie in enumerate(cookie_list,start=1):
         print(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
         apDoTask(cookie)
-      #  happyDigHome(cookie)
-      #  spring_reward_list(cookie)
+        happyDigHome(cookie)
+        spring_reward_list(cookie)
 
 
 if __name__ == '__main__':
