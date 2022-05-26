@@ -9,6 +9,8 @@ new Env('发财挖宝-任务版');
 '''
 import os,json,random,time,re,string,functools,asyncio
 import sys
+from functools import partial
+print = partial(print, flush=True)
 sys.path.append('../../tmp')
 print('\n运行本脚本之前请手动进入游戏点击一个方块\n')
 print('\n挖的如果都是0.01红包就是黑了，别挣扎了！\n')
