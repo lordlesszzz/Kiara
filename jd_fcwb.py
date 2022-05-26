@@ -383,8 +383,8 @@ def main():
         print(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
         apDoTask(cookie)
       #  happyDigHome(cookie)
-        spring_reward_list(cookie)
+      #  spring_reward_list(cookie)
 
 
 if __name__ == '__main__':
-    main()
+#    main()
