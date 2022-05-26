@@ -7,8 +7,6 @@ new Env('发财挖宝-任务版');
 脚本功能为: 挖宝，提现，没有助力功能! 
 当血量剩余 1 时停止挖宝，领取奖励并提现
 '''
-from functools import partial
-print = partial(print, flush=True)
 import os,json,random,time,re,string,functools,asyncio
 import sys
 sys.path.append('../../tmp')
