@@ -14,7 +14,7 @@ print = partial(print, flush=True)
 sys.path.append('../../tmp')
 print('\n运行本脚本之前请手动进入游戏点击一个方块\n')
 print('\n挖的如果都是0.01红包就是黑了，别挣扎了！\n')
-print('\n默认自动领取奖励，关闭请在代码383行加上#号注释即可\n')
+print('\n默认自动领取奖励，关闭请在代码386行加上#号注释即可\n')
 try:
     import requests
 except Exception as e:
