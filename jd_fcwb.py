@@ -299,7 +299,7 @@ def happyDigExchange(cookie):
             print(res['errMsg']+'\n')
 
 
-'''
+
 # 微信现金id
 def spring_reward_list(cookie):
     happyDigExchange(cookie)
@@ -358,7 +358,7 @@ def wecat(cookie,amountid,poolBaseId,prizeGroupId,prizeBaseId):
     except:
         print(res)
         print('')
-'''    
+    
 
 def main():
     print('🔔发财挖宝，开始！\n')
@@ -383,7 +383,7 @@ def main():
         print(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
         apDoTask(cookie)
         happyDigHome(cookie)
-        spring_reward_list(cookie)
+    #    spring_reward_list(cookie)
 
 
 if __name__ == '__main__':
