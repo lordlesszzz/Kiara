@@ -1,5 +1,5 @@
 /*
-锦鲤
+愤怒的锦鲤
 更新时间：2022-04-18
 备注：在kois环境变量中填入需要助力的pt_pin，有多个请用@符号连接
 
@@ -14,9 +14,9 @@ export gua_cleancart_PandaToken = '' 任选一，填一个但是不会真的在�
 export Rabbit_Url ="" 任选一，填一个但是不会真的在线获取
 */
 
-let x = require('./jinli_log.js')
+let x = require('./utils/koi_log.js')
 // console.log(x.jinli_logs)
-const $ = new Env("锦鲤")
+const $ = new Env("愤怒的锦鲤")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
@@ -48,7 +48,7 @@ let notify, allMessage = '';
 
 !(async () => {
     await requireConfig()
-    console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
+    //console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
     console.log(`当前配置的车头数目：${chetou_number}，是否开启公平模式：${fair_mode}`)
     console.log("开始获取用于助力的账号列表")
     for (let i in cookiesArr) {
