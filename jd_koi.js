@@ -225,7 +225,7 @@ async function getHelpInfoForCk(cookieIndex, cookie) {
     // let random = logs.match(/"random":"(\d+)"/)[1].toString(), log = logs.match(/"log":"(.*)"/)[1].toString()
     // let random = logs["random"].toString(),log =logs["log"].toString()
     let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
-  //console.log(random,log)
+    console.log(random,log)
     let data;
     // 开启红包
     data = await with_retry("开启红包活动", async () => {
