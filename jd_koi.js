@@ -1,26 +1,670 @@
 /*
 锦鲤红包
-入口：[京东App》我的》锦鲤红包]
+更新时间：2022-04-18
+备注：在kois环境变量中填入需要助力的pt_pin，有多个请用@符号连接
 
-主要功能多账号自动助力+多账号自动开红包。运行(白名单内不火爆，白名单内不火爆，白名单内不火爆)
-注意！！！
-ip白名单内
-
-本地配置变量跑10个号就火爆
-JD_KOI_RANDOM="random1&random2&random3"  非必须 抓包获取的随机数 例如  "74989111"
-JD_KOI_LOG="log1&log2&log3"     非必须 抓包获取的日志  例如  "1646488443877~1aqwFMQ==..."
-JD_KOI_OPENRED="" 非必须 自动开红包。若不想自动开红包 JD_KOI_OPENRED  设置为 false
-JD_KOI_CODE=""    非必须 未设置默认助力第一个号 例如 "438721140" 如果设置助力满指定码则退出，不会自动开红包。
-
-[task_local]
-#锦鲤红包
-5 0 * * * jd_koi.js, tag=锦鲤红包
+改用以下变量
+#若配置，则车头外的ck随机顺序，这样可以等概率的随到前面来
+export JINLI_FAIR_MODE="true"
+export JINLI_CHETOU_NUMBER=1 #车头按顺序，如1代表仅给ck1助力
+#其他变量
+export kois ="pt_pin@pt_pin@pt_pin" 指定车头pin
+export PROXY_URL ="" ip代理api，可不加
+export gua_cleancart_PandaToken = '' 任选一，填一个但是不会真的在线获取
+export Rabbit_Url ="" 任选一，填一个但是不会真的在线获取
 */
-const $ = new Env("锦鲤红包互助");
+
+let x = require('./utils/koi_log.js')
+// console.log(x.jinli_logs)
+const $ = new Env("锦鲤红包-JS")
+require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+//const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
+const ua = "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; Mi Note 2 Build/OPR1.170623.032) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/61.0.3163.128 Mobile Safari/537.36 XiaoMi/MiuiBrowser/10.1.1"
+let fair_mode = process.env.JINLI_FAIR_MODE == "true" ? true : false
+let chetou_number = process.env.JINLI_CHETOU_NUMBER ? Number(process.env.JINLI_CHETOU_NUMBER) : 0
+var kois = process.env.kois ?? ""
+let proxyUrl = process.env.PROXY_URL ?? ""; // 代理的api地址
+let proxy = "";
+let RabbitUrl = process.env.Rabbit_Url ?? ""; // logurl
+let jdPandaToken = '';
+jdPandaToken = $.isNode() ? (process.env.gua_cleancart_PandaToken ? process.env.gua_cleancart_PandaToken : `${jdPandaToken}`) : ($.getdata('gua_cleancart_PandaToken') ? $.getdata('gua_cleancart_PandaToken') : `${jdPandaToken}`);
+let nums = 0;
+let cookiesArr = []
+let scriptsLogArr = []
+var tools = []
+if (proxyUrl){
+    let urlRex =
+        /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/g;
+    global.GLOBAL_AGENT.NO_PROXY = `${urlRex.exec(proxyUrl)[0]},log.catttt.com`;
+}
+if (!jdPandaToken && !RabbitUrl){
+    console.log(`请填写Panda获取的Token,变量是gua_cleancart_PandaToke 或者填写Rabbit获取的logurl，变量是Rabbit_Url`)
+    return;
+}
+var logs;
 
-var __encode ='jsjiami.com',_a={}, _0xb483=["\x5F\x64\x65\x63\x6F\x64\x65","\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];(function(_0xd642x1){_0xd642x1[_0xb483[0]]= _0xb483[1]})(_a);var __Oxe1088=["","\x72\x61\x6E\x64\x6F\x6D\x4E\x75\x6D","\x6A\x6C\x4C\x6F\x67","\x63\x6F\x64\x65","\x61\x75\x74\x68\x6F\x72\x43\x6F\x64\x65","\x72\x65\x74\x75\x72\x6E\x46\x6C\x61\x67","\x62\x72\x65\x61\x6B\x46\x6C\x61\x67","\x63\x6F\x6E\x74\x69\x6E\x75\x65\x46\x6C\x61\x67","\x69\x73\x4E\x6F\x64\x65","\x70\x75\x73\x68","\x66\x6F\x72\x45\x61\x63\x68","\x6B\x65\x79\x73","\x4A\x44\x5F\x44\x45\x42\x55\x47","\x65\x6E\x76","\x66\x61\x6C\x73\x65","\x6C\x6F\x67","\x4A\x44\x5F\x4B\x4F\x49\x5F\x43\x4F\x44\x45","\x6C\x65\x6E\x67\x74\x68","\x64\x6F\x6E\x65","\x66\x69\x6E\x61\x6C\x6C\x79","\u274C\x20","\x6E\x61\x6D\x65","\x2C\x20\u5931\u8D25\x21\x20\u539F\u56E0\x3A\x20","\x21","\x63\x61\x74\x63\x68","\u3010\u63D0\u793A\u3011\u8BF7\u5148\u83B7\u53D6\u4EAC\u4E1C\u8D26\u53F7\u4E00\x63\x6F\x6F\x6B\x69\x65\x0A\u76F4\u63A5\u4F7F\u7528\x4E\x6F\x62\x79\x44\x61\u7684\u4EAC\u4E1C\u7B7E\u5230\u83B7\u53D6","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x62\x65\x61\x6E\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x62\x65\x61\x6E\x2F\x73\x69\x67\x6E\x49\x6E\x64\x65\x78\x2E\x61\x63\x74\x69\x6F\x6E","\x6D\x73\x67","\u4F60\u4E0D\u5728\x69\x70\u767D\u540D\u5355\u4E2D\uFF01","\x55\x73\x65\x72\x4E\x61\x6D\x65","\x6D\x61\x74\x63\x68","\x69\x6E\x64\x65\x78","\x6E\x69\x63\x6B\x4E\x61\x6D\x65","\x69\x73\x4C\x6F\x67\x69\x6E","\u3010\u63D0\u793A\u3011\x63\x6F\x6F\x6B\x69\x65\u5DF2\u5931\u6548","\u4EAC\u4E1C\u8D26\u53F7","\x20","\x5C\x6E\u8BF7\u91CD\u65B0\u767B\u5F55\u83B7\u53D6\x5C\x6E\x68\x74\x74\x70\x73\x3A\x2F\x2F\x62\x65\x61\x6E\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x62\x65\x61\x6E\x2F\x73\x69\x67\x6E\x49\x6E\x64\x65\x78\x2E\x61\x63\x74\x69\x6F\x6E","\x72\x61\x6E\x64\x6F\x6D","\x77\x61\x69\x74","\u672A\u8BBE\u7F6E\x4A\x44\x5F\x4B\x4F\x49\x5F\x43\x4F\x44\x45\x2C\u9ED8\u8BA4\u52A9\u529B\u7B2C\u4E00\u4E2A\u53F7\x2C\u52A9\u529B\u6EE1\u5219\u4F9D\u6B21\u5F80\u4E0B\u6392","\u5DF2\u8BBE\u7F6E\x4A\x44\x5F\x4B\x4F\x49\x5F\x43\x4F\x44\x45\x2C\u52A9\u529B\u6EE1\u5219\u505C\u6B62","\x31\x38\x38\x36\x32\x39\x38\x38\x30\x32\x31\x5F\x70","\x6A\x69\x6E\x6C\x69\x5F\x68\x35\x61\x73\x73\x69\x73\x74","\x4A\x4C\x48\x42\x68\x50\x61\x67\x65\x68\x35","\x73\x74\x61\x74\x75\x73\x44\x65\x73\x63","\x72\x65\x73\x75\x6C\x74","\x64\x61\x74\x61","\u8D26\u53F7\u3010","\u3011\x20\u52A9\u529B\x3A\x20","\x20\x2D\x20","\u554A\u5076\uFF0C\x54\x41\u7684\u52A9\u529B\u5DF2\u6EE1\uFF0C\u5F00\u542F\u81EA\u5DF1\u7684\u7EA2\u5305\u6D3B\u52A8\u5427\x7E","\u68C0\u6D4B\u5230\u8BBE\u7F6E\u4E86\x4A\x44\x5F\x4B\x4F\x49\x5F\x43\x4F\x44\x45\x2C\x20\x54\x41\u7684\u52A9\u529B\u5DF2\u6EE1\u81EA\u52A8\u9000\u51FA","\u8BF7\u53BB\u4EAC\u4E1C\u5546\u57CE\x2D\x3E\u6211\u7684\x2D\x3E\u66F4\u591A\u6E38\u620F\x2D\x3E\u9526\u9CA4\u7EA2\u5305\u624B\u52A8\u5F00\u7EA2\u5305","\u7D2F\u79EF\u5230","\u706B\u7206\u503C\x2C\u6B47\u4E00\u6B47\u5C06\u9000\u51FA\u7A0B\u5E8F\x21\x21\x21","\x20\x2D\x20\u706B\u7206\x2C\x20\u4E0D\u8981\u9891\u7E41\u64CD\u4F5C\x21","\x54\x41\u7684\u52A9\u529B\u5DF2\u6EE1\x2C\x20\u81EA\u52A8\u5207\u6362\u4E0B\u4E00\u4E2A\u8D26\u53F7","\x69\x6E\x63\x6C\x75\x64\x65\x73","\x73\x68\x69\x66\x74","\x2F\x61\x70\x69\x3F\x61\x70\x70\x69\x64\x3D\x6A\x69\x6E\x6C\x69\x68\x6F\x6E\x67\x62\x61\x6F\x26\x66\x75\x6E\x63\x74\x69\x6F\x6E\x49\x64\x3D","\x26\x6C\x6F\x67\x69\x6E\x54\x79\x70\x65\x3D\x32\x26\x63\x6C\x69\x65\x6E\x74\x3D\x6A\x69\x6E\x6C\x69\x68\x6F\x6E\x67\x62\x61\x6F\x26\x74\x3D","\x6E\x6F\x77","\x26\x63\x6C\x69\x65\x6E\x74\x56\x65\x72\x73\x69\x6F\x6E\x3D\x31\x30\x2E\x33\x2E\x35\x26\x6F\x73\x56\x65\x72\x73\x69\x6F\x6E\x3D\x2D\x31","\x2E","\x5F","\x72\x65\x70\x6C\x61\x63\x65","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x68\x35\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x68\x35\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x62\x61\x62\x65\x6C\x44\x69\x79\x2F\x5A\x65\x75\x73\x2F\x33\x75\x67\x65\x64\x46\x61\x37\x79\x41\x36\x4E\x68\x78\x4C\x4E\x35\x67\x77\x32\x4C\x33\x50\x46\x39\x73\x51\x43\x2F\x69\x6E\x64\x65\x78\x2E\x68\x74\x6D\x6C","\x61\x70\x70\x6C\x69\x63\x61\x74\x69\x6F\x6E\x2F\x78\x2D\x77\x77\x77\x2D\x66\x6F\x72\x6D\x2D\x75\x72\x6C\x65\x6E\x63\x6F\x64\x65\x64","\x63\x6F\x6D\x2E\x6A\x69\x6E\x67\x64\x6F\x6E\x67\x2E\x61\x70\x70\x2E\x6D\x61\x6C\x6C","\x69\x50\x68\x6F\x6E\x65\x3B\x31\x30\x2E\x33\x2E\x35\x3B","\x3B","\x3B\x6E\x65\x74\x77\x6F\x72\x6B\x2F\x77\x69\x66\x69\x3B\x4D\x6F\x7A\x69\x6C\x6C\x61\x2F\x35\x2E\x30\x20\x28\x69\x50\x68\x6F\x6E\x65\x3B\x20\x43\x50\x55\x20\x69\x50\x68\x6F\x6E\x65\x20\x4F\x53\x20","\x20\x6C\x69\x6B\x65\x20\x4D\x61\x63\x20\x4F\x53\x20\x58\x29\x20\x41\x70\x70\x6C\x65\x57\x65\x62\x4B\x69\x74\x2F\x36\x30\x35\x2E\x31\x2E\x31\x35\x20\x28\x4B\x48\x54\x4D\x4C\x2C\x20\x6C\x69\x6B\x65\x20\x47\x65\x63\x6B\x6F\x29\x20\x4D\x6F\x62\x69\x6C\x65\x2F\x31\x35\x45\x31\x34\x38\x3B\x73\x75\x70\x70\x6F\x72\x74\x4A\x44\x53\x48\x57\x4B\x2F\x31","\x62\x6F\x64\x79\x3D","\x73\x74\x72\x69\x6E\x67\x69\x66\x79","\x70\x61\x72\x73\x65","\u8BF7\u6C42","\u5931\u8D25\uFF0C\x72\x65\x73\x70\x3D","\uFF0C\x64\x61\x74\x61\x3D","\x2C\x20\x65\x3D","\x77\x61\x72\x6E","\x70\x6F\x73\x74","\x68\x74\x74\x70\x3A\x2F\x2F\x68\x7A\x2E\x66\x65\x76\x65\x72\x72\x75\x6E\x2E\x74\x6F\x70\x3A\x39\x39\x2F\x73\x68\x61\x72\x65\x2F\x67\x65\x74\x2F\x74\x6F\x6B\x65\x6E\x3F\x66\x6C\x61\x67\x3D\x6B\x6F\x69","\u8BF7\u6C42\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u7F51\u8DEF\u91CD\u8BD5","\x67\x65\x74","\x68\x74\x74\x70\x3A\x2F\x2F\x68\x7A\x2E\x66\x65\x76\x65\x72\x72\x75\x6E\x2E\x74\x6F\x70\x3A\x39\x39\x2F\x73\x68\x61\x72\x65\x2F\x67\x65\x74\x2F\x6B\x6F\x69\x6C\x6F\x67\x73","\u8BF7\u6C42\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u7F51\u8DEF","\x68\x74\x74\x70\x3A\x2F\x2F\x68\x7A\x2E\x66\x65\x76\x65\x72\x72\x75\x6E\x2E\x74\x6F\x70\x3A\x39\x39\x2F\x73\x68\x61\x72\x65\x2F\x73\x75\x62\x6D\x69\x74\x2F\x61\x75\x74\x68\x6F\x72\x3F\x63\x6F\x64\x65\x3D","\x26\x75\x73\x65\x72\x3D","\x26\x66\x6C\x61\x67\x3D\x6B\x6F\x69","\x20\u8BF7\u6C42\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u7F51\u8DEF\u91CD\u8BD5","\x68\x74\x74\x70\x3A\x2F\x2F\x68\x7A\x2E\x66\x65\x76\x65\x72\x72\x75\x6E\x2E\x74\x6F\x70\x3A\x39\x39\x2F\x73\x68\x61\x72\x65\x2F\x67\x65\x74\x2F\x61\x75\x74\x68\x6F\x72\x3F\x66\x6C\x61\x67\x3D\x6B\x6F\x69","\x68\x35\x6C\x61\x75\x6E\x63\x68","\x73\x74\x61\x74\x75\x73","\u8D26\u53F7","\u706B\u7206\x20\x2D\x20\u542F\u52A8\u5931\u8D25","\u3011","\x68\x35\x61\x63\x74\x69\x76\x69\x74\x79\x49\x6E\x64\x65\x78","\u4E92\u52A9\u7801\x3A\x20","\x69\x64","\x72\x65\x64\x70\x61\x63\x6B\x65\x74\x49\x6E\x66\x6F","\u8D26\u53F7\u4E00\x20\x2D\x20\u706B\u7206\x20\x2D\x20\u83B7\u53D6\u4E0D\u5230\u52A9\u529B\u7801\x20\x2D\x20\u9000\u51FA","\u706B\u7206\x20\x2D\x20\u83B7\u53D6\u4E0D\u5230\u52A9\u529B\u7801","\u5DF2\u8FBE\u5230\u62C6\u7EA2\u5305\u6570\u91CF\u4E0A\u9650","\x6F\x62\x6A\x65\x63\x74","\x76\x61\x6C\x75\x65\x73","\x69\x73\x57\x68\x69\x74\x65","\u68C0\u6D4B\u5230\x4A\x44\x5F\x4B\x4F\x49\x5F\x43\x4F\x44\x45\x2C\x20\u8BF7\u53BB\u4EAC\u4E1C\u5546\u57CE\x2D\x3E\u6211\u7684\x2D\x3E\u66F4\u591A\u6E38\u620F\x2D\x3E\u9526\u9CA4\u7EA2\u5305\u624B\u52A8\u5F00\u7EA2\u5305","\u5185\u90E8\u4ECE\u524D\u5230\u540E\u4F9D\u6B21\u5F00\u7EA2\u5305","\u62C6\u7EA2\u5305","\x68\x35\x72\x65\x63\x65\x69\x76\x65\x52\x65\x64\x70\x61\x63\x6B\x65\x74\x41\x6C\x6C","\x62\x69\x7A\x5F\x63\x6F\x64\x65","\u9886\u53D6\u5230\x20","\x64\x69\x73\x63\x6F\x75\x6E\x74","\x20\u5143\u7EA2\u5305","\x69\x6E\x66\x6F","\u9886\u53D6\u7EA2\u5305\u5931\u8D25\uFF0C\u7ED3\u679C\u4E3A\x20","\x65\x72\x72\x6F\x72","\u4E0D\u7BA1\u6210\u529F\u8FD8\u662F\u4E0D\u6210\u529F\uFF0C\u4E0D\u8981\u9891\u7E41\u8FD0\u884C\u811A\u672C\x21\x21\x21","\u5F02\u5E38\x3A\x20\u53BB\u4EAC\u4E1C\u5546\u57CE\x2D\x3E\u6211\u7684\x2D\x3E\u66F4\u591A\u6E38\u620F\x2D\x3E\u9526\u9CA4\u7EA2\u5305\u624B\u52A8\u5F00\u7EA2\u5305","\x68\x74\x74\x70\x3A\x2F\x2F\x68\x7A\x2E\x66\x65\x76\x65\x72\x72\x75\x6E\x2E\x74\x6F\x70\x3A\x39\x39\x2F\x73\x68\x61\x72\x65\x2F\x73\x75\x62\x6D\x69\x74\x2F\x6B\x6F\x69\x6C\x6F\x67\x73\x3F\x6C\x6F\x67\x3D","\x26\x6E\x75\x6D\x3D","\x67\x65\x74\x54\x69\x6D\x65","\x66\x6C\x6F\x6F\x72","\x31\x32\x2E\x30","\x31\x32\x2E\x31","\x31\x32\x2E\x32","\x31\x32\x2E\x33","\x31\x32\x2E\x34","\x31\x32\x2E\x35","\x31\x33\x2E\x30","\x31\x33\x2E\x31","\x31\x33\x2E\x32","\x31\x33\x2E\x33","\x31\x33\x2E\x34","\x31\x33\x2E\x35","\x31\x33\x2E\x36","\x31\x33\x2E\x37","\x31\x34\x2E\x30","\x31\x34\x2E\x31","\x31\x34\x2E\x32","\x31\x34\x2E\x33","\x31\x34\x2E\x34","\x31\x34\x2E\x35","\x31\x34\x2E\x36","\x31\x34\x2E\x37","\x31\x34\x2E\x38","\x31\x35\x2E\x30","\x31\x35\x2E\x31","\x31\x35\x2E\x32","\x31\x35\x2E\x33","\x61\x62\x63\x64\x65\x66\x68\x69\x6A\x6B\x6D\x6E\x70\x72\x73\x74\x77\x78\x79\x7A\x32\x33\x34\x35\x36\x37\x38","\x63\x68\x61\x72\x41\x74","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x6D\x65\x2D\x61\x70\x69\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x75\x73\x65\x72\x5F\x6E\x65\x77\x2F\x69\x6E\x66\x6F\x2F\x47\x65\x74\x4A\x44\x55\x73\x65\x72\x49\x6E\x66\x6F\x55\x6E\x69\x6F\x6E","\x6D\x65\x2D\x61\x70\x69\x2E\x6A\x64\x2E\x63\x6F\x6D","\x2A\x2F\x2A","\x6B\x65\x65\x70\x2D\x61\x6C\x69\x76\x65","\x4D\x6F\x7A\x69\x6C\x6C\x61\x2F\x35\x2E\x30\x20\x28\x69\x50\x68\x6F\x6E\x65\x3B\x20\x43\x50\x55\x20\x69\x50\x68\x6F\x6E\x65\x20\x4F\x53\x20\x31\x34\x5F\x33\x20\x6C\x69\x6B\x65\x20\x4D\x61\x63\x20\x4F\x53\x20\x58\x29\x20\x41\x70\x70\x6C\x65\x57\x65\x62\x4B\x69\x74\x2F\x36\x30\x35\x2E\x31\x2E\x31\x35\x20\x28\x4B\x48\x54\x4D\x4C\x2C\x20\x6C\x69\x6B\x65\x20\x47\x65\x63\x6B\x6F\x29\x20\x56\x65\x72\x73\x69\x6F\x6E\x2F\x31\x34\x2E\x30\x2E\x32\x20\x4D\x6F\x62\x69\x6C\x65\x2F\x31\x35\x45\x31\x34\x38\x20\x53\x61\x66\x61\x72\x69\x2F\x36\x30\x34\x2E\x31","\x7A\x68\x2D\x63\x6E","\x68\x74\x74\x70\x73\x3A\x2F\x2F\x68\x6F\x6D\x65\x2E\x6D\x2E\x6A\x64\x2E\x63\x6F\x6D\x2F\x6D\x79\x4A\x64\x2F\x6E\x65\x77\x68\x6F\x6D\x65\x2E\x61\x63\x74\x69\x6F\x6E\x3F\x73\x63\x65\x6E\x65\x76\x61\x6C\x3D\x32\x26\x75\x66\x63\x3D\x26","\x67\x7A\x69\x70\x2C\x20\x64\x65\x66\x6C\x61\x74\x65\x2C\x20\x62\x72","\x6C\x6F\x67\x45\x72\x72","\x72\x65\x74\x63\x6F\x64\x65","\x31\x30\x30\x31","\x30","\x75\x73\x65\x72\x49\x6E\x66\x6F","\x68\x61\x73\x4F\x77\x6E\x50\x72\x6F\x70\x65\x72\x74\x79","\x6E\x69\x63\x6B\x6E\x61\x6D\x65","\x62\x61\x73\x65\x49\x6E\x66\x6F","\u4EAC\u4E1C\u8FD4\u56DE\u4E86\u7A7A\u6570\u636E","\x75\x6E\x64\x65\x66\x69\x6E\x65\x64","\u5220\u9664","\u7248\u672C\u53F7\uFF0C\x6A\x73\u4F1A\u5B9A","\u671F\u5F39\u7A97\uFF0C","\u8FD8\u8BF7\u652F\u6301\u6211\u4EEC\u7684\u5DE5\u4F5C","\x6A\x73\x6A\x69\x61","\x6D\x69\x2E\x63\x6F\x6D"];let cookiesArr=[],cookie=__Oxe1088[0x0];let ckLength=0;let errNum=0;let openNum=8;let errNumMax=30;let showCodeNum=3;let shareCodes=[];let shareCodess=[];let koilogs=__Oxe1088[0x0];let fullCodes=[];let openReds=[];let isKoiCode=false;$[__Oxe1088[0x1]]= __Oxe1088[0x0];$[__Oxe1088[0x2]]= __Oxe1088[0x0];$[__Oxe1088[0x3]]= __Oxe1088[0x0];$[__Oxe1088[0x4]]= __Oxe1088[0x0];$[__Oxe1088[0x5]]= false;$[__Oxe1088[0x6]]= false;$[__Oxe1088[0x7]]= false;if($[__Oxe1088[0x8]]()){Object[__Oxe1088[0xb]](jdCookieNode)[__Oxe1088[0xa]]((_0xb44cxe)=>{if(jdCookieNode[_0xb44cxe]){cookiesArr[__Oxe1088[0x9]](jdCookieNode[_0xb44cxe])}});if(process[__Oxe1088[0xd]][__Oxe1088[0xc]]&& process[__Oxe1088[0xd]][__Oxe1088[0xc]]=== __Oxe1088[0xe]){console[__Oxe1088[0xf]]= ()=>{}};if(process[__Oxe1088[0xd]][__Oxe1088[0x10]]){$[__Oxe1088[0x3]]= process[__Oxe1088[0xd]][__Oxe1088[0x10]];isKoiCode= true};ckLength= cookiesArr[__Oxe1088[0x11]]};!(async ()=>{if(!cookiesArr[0x0]){$[__Oxe1088[0x1b]]($[__Oxe1088[0x15]],__Oxe1088[0x19],__Oxe1088[0x1a],{"\x6F\x70\x65\x6E\x2D\x75\x72\x6C":__Oxe1088[0x1a]});return};let _0xb44cx10= await rw();if(!_0xb44cx10|| _0xb44cx10[__Oxe1088[0x3]]!= 0){console[__Oxe1088[0xf]](`${__Oxe1088[0x1c]}`);return};for(let _0xb44cx11=0;_0xb44cx11< cookiesArr[__Oxe1088[0x11]];_0xb44cx11++){$[__Oxe1088[0x6]]= false;$[__Oxe1088[0x7]]= false;cookie= cookiesArr[_0xb44cx11];$[__Oxe1088[0x1d]]= decodeURIComponent(cookie[__Oxe1088[0x1e]](/pt_pin=([^; ]+)(?=;?)/)&& cookie[__Oxe1088[0x1e]](/pt_pin=([^; ]+)(?=;?)/)[0x1]);$[__Oxe1088[0x1f]]= _0xb44cx11+ 1;$[__Oxe1088[0x20]]= __Oxe1088[0x0];$[__Oxe1088[0x21]]= true; await checkCookie();if(!$[__Oxe1088[0x21]]){$[__Oxe1088[0x1b]]($[__Oxe1088[0x15]],`${__Oxe1088[0x22]}`,`${__Oxe1088[0x23]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x24]}${$[__Oxe1088[0x20]]|| $[__Oxe1088[0x1d]]}${__Oxe1088[0x25]}`,{"\x6F\x70\x65\x6E\x2D\x75\x72\x6C":__Oxe1088[0x1a]});if($[__Oxe1088[0x8]]()){};continue}; await getLauch(); await geth5activityIndex();if($[__Oxe1088[0x6]]){break};if($[__Oxe1088[0x7]]){continue}};if($[__Oxe1088[0x5]]=== true){return}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 1000+ 2500,10));try{if(process[__Oxe1088[0xd]][__Oxe1088[0x10]]){$[__Oxe1088[0x3]]= process[__Oxe1088[0xd]][__Oxe1088[0x10]]}else {if(shareCodes[0x0]){$[__Oxe1088[0x3]]= shareCodes[0x0]}else {$[__Oxe1088[0x3]]= __Oxe1088[0x0]}}}catch(e){$[__Oxe1088[0x3]]= __Oxe1088[0x0]};if(!process[__Oxe1088[0xd]][__Oxe1088[0x10]]){console[__Oxe1088[0xf]](`${__Oxe1088[0x28]}`); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 3000,10))}else {console[__Oxe1088[0xf]](`${__Oxe1088[0x29]}`); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 3000,10))};$[__Oxe1088[0x4]]=  await rc();for(let _0xb44cx12=0;_0xb44cx12< cookiesArr[__Oxe1088[0x11]];_0xb44cx12++){$[__Oxe1088[0x5]]= false;cookie= cookiesArr[_0xb44cx12];$[__Oxe1088[0x1d]]= decodeURIComponent(cookie[__Oxe1088[0x1e]](/pt_pin=([^; ]+)(?=;?)/)&& cookie[__Oxe1088[0x1e]](/pt_pin=([^; ]+)(?=;?)/)[0x1]);$[__Oxe1088[0x1f]]= _0xb44cx12+ 1;$[__Oxe1088[0x20]]= __Oxe1088[0x0];$[__Oxe1088[0x21]]= true; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2000,10)); await checkCookie();if(!$[__Oxe1088[0x21]]){$[__Oxe1088[0x1b]]($[__Oxe1088[0x15]],`${__Oxe1088[0x22]}`,`${__Oxe1088[0x23]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x24]}${$[__Oxe1088[0x20]]|| $[__Oxe1088[0x1d]]}${__Oxe1088[0x25]}`,{"\x6F\x70\x65\x6E\x2D\x75\x72\x6C":__Oxe1088[0x1a]});if($[__Oxe1088[0x8]]()){};continue}; await getrl();if(isKoiCode){if($[__Oxe1088[0x3]]){try{if($[__Oxe1088[0x4]]&& $[__Oxe1088[0x1]]){if($[__Oxe1088[0x1f]]== 1&& $[__Oxe1088[0x1d]]!= __Oxe1088[0x2a]){let _0xb44cx13= await api(__Oxe1088[0x2b],{"\x72\x65\x64\x50\x61\x63\x6B\x65\x74\x49\x64":$[__Oxe1088[0x4]],"\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70":0,"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]){ await sl(); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10))};continue}else {if($[__Oxe1088[0x1f]]== 1){continue}}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10))}}catch(e){ await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10))};try{if($[__Oxe1088[0x1]]){let _0xb44cx13= await api(__Oxe1088[0x2b],{"\x72\x65\x64\x50\x61\x63\x6B\x65\x74\x49\x64":$[__Oxe1088[0x3]],"\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70":0,"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]){console[__Oxe1088[0xf]](`${__Oxe1088[0x30]}${$[__Oxe1088[0x1d]]}${__Oxe1088[0x31]}${$[__Oxe1088[0x3]]}${__Oxe1088[0x32]}${_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]}${__Oxe1088[0x0]}`); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10));if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]== __Oxe1088[0x33]){console[__Oxe1088[0xf]](__Oxe1088[0x34]);console[__Oxe1088[0xf]](__Oxe1088[0x35]);$[__Oxe1088[0x5]]= true;break}}}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))}catch(e){if(errNum>= errNumMax){console[__Oxe1088[0xf]](`${__Oxe1088[0x36]}${errNumMax}${__Oxe1088[0x37]}`);$[__Oxe1088[0x5]]= true;break};console[__Oxe1088[0xf]](`${__Oxe1088[0x30]}${$[__Oxe1088[0x1d]]}${__Oxe1088[0x31]}${$[__Oxe1088[0x3]]}${__Oxe1088[0x38]}`);errNum++; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 10000+ 15000,10))}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10))}}else {if($[__Oxe1088[0x3]]){try{if($[__Oxe1088[0x4]]&& $[__Oxe1088[0x1]]){if($[__Oxe1088[0x1f]]== 1&& $[__Oxe1088[0x1d]]!= __Oxe1088[0x2a]){let _0xb44cx13= await api(__Oxe1088[0x2b],{"\x72\x65\x64\x50\x61\x63\x6B\x65\x74\x49\x64":$[__Oxe1088[0x4]],"\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70":0,"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]){ await sl(); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10))};continue}else {if($[__Oxe1088[0x1f]]== 1){continue}}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))}}catch(e){ await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))};try{if($[__Oxe1088[0x1]]){let _0xb44cx13= await api(__Oxe1088[0x2b],{"\x72\x65\x64\x50\x61\x63\x6B\x65\x74\x49\x64":$[__Oxe1088[0x3]],"\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70":0,"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]){console[__Oxe1088[0xf]](`${__Oxe1088[0x30]}${$[__Oxe1088[0x1d]]}${__Oxe1088[0x31]}${$[__Oxe1088[0x3]]}${__Oxe1088[0x32]}${_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]}${__Oxe1088[0x0]}`); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10));if(_0xb44cx13[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x2d]]== __Oxe1088[0x33]){console[__Oxe1088[0xf]](__Oxe1088[0x39]);if(!fullCodes[__Oxe1088[0x3a]]($[__Oxe1088[0x3]])){fullCodes[__Oxe1088[0x9]]($[__Oxe1088[0x3]])};shareCodes[__Oxe1088[0x3b]]();$[__Oxe1088[0x3]]= shareCodes[0x0]}}}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))}catch(e){if(errNum>= errNumMax){console[__Oxe1088[0xf]](`${__Oxe1088[0x36]}${errNumMax}${__Oxe1088[0x37]}`);$[__Oxe1088[0x5]]= true;break};console[__Oxe1088[0xf]](`${__Oxe1088[0x30]}${$[__Oxe1088[0x1d]]}${__Oxe1088[0x31]}${$[__Oxe1088[0x3]]}${__Oxe1088[0x38]}`);errNum++; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 10000+ 15000,10))}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10))}}};if($[__Oxe1088[0x5]]=== true){return}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 3000,10)); await autoOpenRed()})()[__Oxe1088[0x18]]((_0xb44cxf)=>{$[__Oxe1088[0xf]](__Oxe1088[0x0],`${__Oxe1088[0x14]}${$[__Oxe1088[0x15]]}${__Oxe1088[0x16]}${_0xb44cxf}${__Oxe1088[0x17]}`,__Oxe1088[0x0])})[__Oxe1088[0x13]](()=>{$[__Oxe1088[0x12]]()});async function api(_0xb44cx15,_0xb44cx16= {}){let _0xb44cx17=`${__Oxe1088[0x0]}${JD_API_HOST}${__Oxe1088[0x3c]}${_0xb44cx15}${__Oxe1088[0x3d]}${Date[__Oxe1088[0x3e]]()}${__Oxe1088[0x3f]}`; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 1000+ 1500,10));return  new Promise((_0xb44cx18)=>{let _0xb44cx19=getIphoneVersion();let _0xb44cx1a=_0xb44cx19[__Oxe1088[0x42]](__Oxe1088[0x40],__Oxe1088[0x41]);$[__Oxe1088[0x53]]({url:_0xb44cx17,headers:{"\x43\x6F\x6F\x6B\x69\x65":cookie,"\x6F\x72\x69\x67\x69\x6E":__Oxe1088[0x43],"\x72\x65\x66\x65\x72\x65\x72":__Oxe1088[0x44],'\x43\x6F\x6E\x74\x65\x6E\x74\x2D\x54\x79\x70\x65':__Oxe1088[0x45],"\x58\x2D\x52\x65\x71\x75\x65\x73\x74\x65\x64\x2D\x57\x69\x74\x68":__Oxe1088[0x46],"\x55\x73\x65\x72\x2D\x41\x67\x65\x6E\x74":`${__Oxe1088[0x47]}${_0xb44cx19}${__Oxe1088[0x48]}${randomString(40)}${__Oxe1088[0x49]}${_0xb44cx1a}${__Oxe1088[0x4a]}`},body:`${__Oxe1088[0x4b]}${encodeURIComponent(JSON[__Oxe1088[0x4c]](_0xb44cx16))}${__Oxe1088[0x0]}`},(_0xb44cx1b,_0xb44cx1c,_0xb44cx1d)=>{try{_0xb44cx1d= JSON[__Oxe1088[0x4d]](_0xb44cx1d)}catch(e){console[__Oxe1088[0x52]](`${__Oxe1088[0x4e]}${_0xb44cx15}${__Oxe1088[0x4f]}${JSON[__Oxe1088[0x4c]](_0xb44cx1c)}${__Oxe1088[0x50]}${JSON[__Oxe1088[0x4c]](_0xb44cx1d)}${__Oxe1088[0x51]}${JSON[__Oxe1088[0x4c]](e)}${__Oxe1088[0x0]}`)}finally{_0xb44cx18(_0xb44cx1d)}})})}function rw(){return  new Promise(async (_0xb44cx18)=>{$[__Oxe1088[0x56]]({url:`${__Oxe1088[0x54]}`,timeout:20000},(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){console[__Oxe1088[0xf]](`${__Oxe1088[0x55]}`)}else {if(_0xb44cx1d&& safeGet(_0xb44cx1d)){_0xb44cx1d= JSON[__Oxe1088[0x4d]](_0xb44cx1d)}else {_0xb44cx1d= _0xb44cx1d}}}catch(e){_0xb44cx1d= __Oxe1088[0x0]}finally{_0xb44cx18(_0xb44cx1d)}})})}function rl(){return  new Promise(async (_0xb44cx18)=>{$[__Oxe1088[0x56]]({url:`${__Oxe1088[0x57]}`,timeout:20000},(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){console[__Oxe1088[0xf]](`${__Oxe1088[0x58]}`)}else {if(_0xb44cx1d&& safeGet(_0xb44cx1d)){_0xb44cx1d= JSON[__Oxe1088[0x4d]](_0xb44cx1d)}else {_0xb44cx1d= _0xb44cx1d}}}catch(e){_0xb44cx1d= __Oxe1088[0x0]}finally{_0xb44cx18(_0xb44cx1d)}})})}function sc(_0xb44cx22,_0xb44cx23){return  new Promise(async (_0xb44cx18)=>{$[__Oxe1088[0x56]]({url:`${__Oxe1088[0x59]}${_0xb44cx22}${__Oxe1088[0x5a]}${_0xb44cx23}${__Oxe1088[0x5b]}`,timeout:20000},(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){console[__Oxe1088[0xf]](`${__Oxe1088[0x0]}${$[__Oxe1088[0x15]]}${__Oxe1088[0x5c]}`)}else {}}catch(e){}finally{_0xb44cx18()}})})}function rc(){return  new Promise(async (_0xb44cx18)=>{$[__Oxe1088[0x56]]({url:`${__Oxe1088[0x5d]}`,timeout:20000},(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){console[__Oxe1088[0xf]](`${__Oxe1088[0x0]}${$[__Oxe1088[0x15]]}${__Oxe1088[0x5c]}`)}else {if(_0xb44cx1d&& safeGet(_0xb44cx1d)){_0xb44cx1d= JSON[__Oxe1088[0x4d]](_0xb44cx1d)}else {_0xb44cx1d= _0xb44cx1d}}}catch(e){_0xb44cx1d= __Oxe1088[0x0]}finally{_0xb44cx18(_0xb44cx1d)}})})}async function getLauch(){ await getrl();return  new Promise(async (_0xb44cx18)=>{try{if($[__Oxe1088[0x1]]){let _0xb44cx1d= await api(__Oxe1088[0x5e],{"\x66\x6F\x6C\x6C\x6F\x77\x53\x68\x6F\x70":1,"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx1d[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x5f]]== 1){console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x61])}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 5000,10))}}catch(e){console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x61]); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 5000,10))};_0xb44cx18()})}async function geth5activityIndex(){$[__Oxe1088[0x6]]= false;$[__Oxe1088[0x7]]= false; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 1000+ 500,10));return  new Promise(async (_0xb44cx18)=>{try{console[__Oxe1088[0xf]](`${__Oxe1088[0x30]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x62]}${$[__Oxe1088[0x1d]]}${__Oxe1088[0x0]}`);data=  await api(__Oxe1088[0x63],{"\x69\x73\x6A\x64\x61\x70\x70":1}); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 1000+ 4500,10));if(data[__Oxe1088[0x2f]][__Oxe1088[0x3]]== 20001){console[__Oxe1088[0xf]](`${__Oxe1088[0x64]}${data[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x66]][__Oxe1088[0x65]]}${__Oxe1088[0x0]}`);shareCodes[__Oxe1088[0x9]](data[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x66]][__Oxe1088[0x65]]);shareCodess[$[__Oxe1088[0x1f]]- 1]= data[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x66]][__Oxe1088[0x65]];if(data[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x66]][__Oxe1088[0x65]]&& $[__Oxe1088[0x1f]]- 1== 0){let _0xb44cx22=data[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x66]][__Oxe1088[0x65]];let _0xb44cx23=$[__Oxe1088[0x1d]];if(_0xb44cx23== __Oxe1088[0x2a]){ await sc(_0xb44cx22,_0xb44cx23)}}}else {if(data[__Oxe1088[0x2f]][__Oxe1088[0x3]]== 10002){if($[__Oxe1088[0x1f]]- 1== 0){console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x67]);$[__Oxe1088[0x5]]= true;$[__Oxe1088[0x7]]= true}else {console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x68]);$[__Oxe1088[0x7]]= true}}else {if(data[__Oxe1088[0x2f]][__Oxe1088[0x3]]== 20002){console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x69]);$[__Oxe1088[0x7]]= true}}}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10));if($[__Oxe1088[0x1f]]- 1>= showCodeNum){$[__Oxe1088[0x6]]= true}}catch(e){console[__Oxe1088[0xf]](`${__Oxe1088[0x60]}${$[__Oxe1088[0x1f]]}${__Oxe1088[0x0]}`,__Oxe1088[0x68]); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 3500,10))};_0xb44cx18()})}function safeGet(_0xb44cx1d){try{if( typeof JSON[__Oxe1088[0x4d]](_0xb44cx1d)== __Oxe1088[0x6a]){return true}}catch(e){return false}}async function getrl(){ await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 3500+ 600,10));return  new Promise(async (_0xb44cx18)=>{koilogs=  await rl();if(koilogs&& koilogs[__Oxe1088[0x3]]== 0){$[__Oxe1088[0x1]]= String(Object[__Oxe1088[0xb]](koilogs[__Oxe1088[0x2f]])[0x0]);$[__Oxe1088[0x2]]= String(Object[__Oxe1088[0x6b]](koilogs[__Oxe1088[0x2f]])[0x0]);$[__Oxe1088[0x6c]]= false}else { await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2500+ 2500,10))};_0xb44cx18()})}async function autoOpenRed(){return  new Promise(async (_0xb44cx18)=>{try{if(isKoiCode){console[__Oxe1088[0xf]](__Oxe1088[0x6d])}else {console[__Oxe1088[0xf]](__Oxe1088[0x6e]);if(fullCodes[__Oxe1088[0x11]]>= 1){if(!fullCodes[__Oxe1088[0x3a]]($[__Oxe1088[0x3]])){fullCodes[__Oxe1088[0x9]]($[__Oxe1088[0x3]])};try{for(let _0xb44cx2a in shareCodess){for(let _0xb44cx2b=0;_0xb44cx2b< fullCodes[__Oxe1088[0x11]];_0xb44cx2b++){if(shareCodess[_0xb44cx2a]== fullCodes[_0xb44cx2b]){openReds[__Oxe1088[0x9]](_0xb44cx2a)}}};for(let _0xb44cx2c of openReds){console[__Oxe1088[0xf]](__Oxe1088[0x6f]);cookie= cookiesArr[_0xb44cx2c]; await getrl();if($[__Oxe1088[0x1]]){for(let _0xb44cx2d=0;_0xb44cx2d< openNum;_0xb44cx2d++){let _0xb44cx1c= await api(__Oxe1088[0x70],{"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx1c[__Oxe1088[0x2f]][__Oxe1088[0x71]]== 0){console[__Oxe1088[0x75]](`${__Oxe1088[0x72]}${_0xb44cx1c[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x73]]}${__Oxe1088[0x74]}`)}else {console[__Oxe1088[0x77]](`${__Oxe1088[0x76]}${JSON[__Oxe1088[0x4c]](_0xb44cx1c)}${__Oxe1088[0x0]}`);break}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10))};console[__Oxe1088[0xf]](__Oxe1088[0x78])}}}catch(e){console[__Oxe1088[0xf]](__Oxe1088[0x79]); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))}}else {try{console[__Oxe1088[0xf]](__Oxe1088[0x6f]);cookie= cookiesArr[0x0]; await getrl();if($[__Oxe1088[0x1]]){for(let _0xb44cx2d=0;_0xb44cx2d< openNum;_0xb44cx2d++){let _0xb44cx1c= await api(__Oxe1088[0x70],{"\x72\x61\x6E\x64\x6F\x6D":$[__Oxe1088[0x1]],"\x6C\x6F\x67":$[__Oxe1088[0x2]],"\x73\x63\x65\x6E\x65\x69\x64":__Oxe1088[0x2c]});if(_0xb44cx1c[__Oxe1088[0x2f]][__Oxe1088[0x71]]== 0){console[__Oxe1088[0x75]](`${__Oxe1088[0x72]}${_0xb44cx1c[__Oxe1088[0x2f]][__Oxe1088[0x2e]][__Oxe1088[0x73]]}${__Oxe1088[0x74]}`)}else {console[__Oxe1088[0x77]](`${__Oxe1088[0x76]}${JSON[__Oxe1088[0x4c]](_0xb44cx1c)}${__Oxe1088[0x0]}`);break}; await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 20000+ 35000,10))};console[__Oxe1088[0xf]](__Oxe1088[0x78])}}catch(e){console[__Oxe1088[0xf]](__Oxe1088[0x79]); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 2500,10))}}}}catch(e){console[__Oxe1088[0xf]](__Oxe1088[0x79]); await $[__Oxe1088[0x27]](parseInt(Math[__Oxe1088[0x26]]()* 2000+ 3000,10))};_0xb44cx18()})}function sl(){return  new Promise(async (_0xb44cx18)=>{$[__Oxe1088[0x56]]({url:`${__Oxe1088[0x7a]}${$[__Oxe1088[0x2]]}${__Oxe1088[0x7b]}${$[__Oxe1088[0x1]]}${__Oxe1088[0x0]}`,timeout:20000},(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){}else {}}catch(e){}finally{_0xb44cx18()}})})}function gettimestamp(){let _0xb44cx30= new Date()[__Oxe1088[0x7c]]();return `${__Oxe1088[0x0]}${_0xb44cx30}${__Oxe1088[0x0]}`}function random(_0xb44cx32,_0xb44cx33){let _0xb44cx34=Math[__Oxe1088[0x7d]](Math[__Oxe1088[0x26]]()* (_0xb44cx33- _0xb44cx32))+ _0xb44cx32;return `${__Oxe1088[0x0]}${_0xb44cx34}${__Oxe1088[0x0]}`}function getIphoneVersion(){let _0xb44cx36=[__Oxe1088[0x7e],__Oxe1088[0x7f],__Oxe1088[0x80],__Oxe1088[0x81],__Oxe1088[0x82],__Oxe1088[0x83],__Oxe1088[0x84],__Oxe1088[0x85],__Oxe1088[0x86],__Oxe1088[0x87],__Oxe1088[0x88],__Oxe1088[0x89],__Oxe1088[0x8a],__Oxe1088[0x8b],__Oxe1088[0x8c],__Oxe1088[0x8d],__Oxe1088[0x8e],__Oxe1088[0x8f],__Oxe1088[0x90],__Oxe1088[0x91],__Oxe1088[0x92],__Oxe1088[0x93],__Oxe1088[0x94],__Oxe1088[0x95],__Oxe1088[0x96],__Oxe1088[0x97],__Oxe1088[0x98]];return _0xb44cx36[random(0,_0xb44cx36[__Oxe1088[0x11]])]}function randomString(_0xb44cxf){_0xb44cxf= _0xb44cxf|| 32;let _0xb44cx38=__Oxe1088[0x99],_0xb44cx39=_0xb44cx38[__Oxe1088[0x11]],_0xb44cx3a=__Oxe1088[0x0];for(i= 0;i< _0xb44cxf;i++){_0xb44cx3a+= _0xb44cx38[__Oxe1088[0x9a]](Math[__Oxe1088[0x7d]](Math[__Oxe1088[0x26]]()* _0xb44cx39))};return _0xb44cx3a}function checkCookie(){const _0xb44cx3c={url:__Oxe1088[0x9b],headers:{"\x48\x6F\x73\x74":__Oxe1088[0x9c],"\x41\x63\x63\x65\x70\x74":__Oxe1088[0x9d],"\x43\x6F\x6E\x6E\x65\x63\x74\x69\x6F\x6E":__Oxe1088[0x9e],"\x43\x6F\x6F\x6B\x69\x65":cookie,"\x55\x73\x65\x72\x2D\x41\x67\x65\x6E\x74":__Oxe1088[0x9f],"\x41\x63\x63\x65\x70\x74\x2D\x4C\x61\x6E\x67\x75\x61\x67\x65":__Oxe1088[0xa0],"\x52\x65\x66\x65\x72\x65\x72":__Oxe1088[0xa1],"\x41\x63\x63\x65\x70\x74\x2D\x45\x6E\x63\x6F\x64\x69\x6E\x67":__Oxe1088[0xa2]}};return  new Promise((_0xb44cx18)=>{$[__Oxe1088[0x56]](_0xb44cx3c,(_0xb44cx1f,_0xb44cx1c,_0xb44cx1d)=>{try{if(_0xb44cx1f){$[__Oxe1088[0xa3]](_0xb44cx1f)}else {if(_0xb44cx1d){_0xb44cx1d= JSON[__Oxe1088[0x4d]](_0xb44cx1d);if(_0xb44cx1d[__Oxe1088[0xa4]]== __Oxe1088[0xa5]){$[__Oxe1088[0x21]]= false;return}else {$[__Oxe1088[0x21]]= true;return};if(_0xb44cx1d[__Oxe1088[0xa4]]=== __Oxe1088[0xa6]&& _0xb44cx1d[__Oxe1088[0x2f]][__Oxe1088[0xa8]](__Oxe1088[0xa7])){$[__Oxe1088[0x20]]= _0xb44cx1d[__Oxe1088[0x2f]][__Oxe1088[0xa7]][__Oxe1088[0xaa]][__Oxe1088[0xa9]]}}else {$[__Oxe1088[0xf]](__Oxe1088[0xab])}}}catch(e){$[__Oxe1088[0xa3]](e)}finally{_0xb44cx18()}})})}(function(_0xb44cx3d,_0xb44cx3e,_0xb44cx3f,_0xb44cx40,_0xb44cx41,_0xb44cx12){_0xb44cx12= __Oxe1088[0xac];_0xb44cx40= function(_0xb44cx42){if( typeof alert!== _0xb44cx12){alert(_0xb44cx42)};if( typeof console!== _0xb44cx12){console[__Oxe1088[0xf]](_0xb44cx42)}};_0xb44cx3f= function(_0xb44cx39,_0xb44cx3d){return _0xb44cx39+ _0xb44cx3d};_0xb44cx41= _0xb44cx3f(__Oxe1088[0xad],_0xb44cx3f(_0xb44cx3f(__Oxe1088[0xae],__Oxe1088[0xaf]),__Oxe1088[0xb0]));try{_0xb44cx3d= __encode;if(!( typeof _0xb44cx3d!== _0xb44cx12&& _0xb44cx3d=== _0xb44cx3f(__Oxe1088[0xb1],__Oxe1088[0xb2]))){_0xb44cx40(_0xb44cx41)}}catch(e){_0xb44cx40(_0xb44cx41)}})({})
+let notify, allMessage = '';
 
-// prettier-ignore
+!(async () => {
+    await requireConfig()
+    console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
+    console.log(`当前配置的车头数目：${chetou_number}，是否开启公平模式：${fair_mode}`)
+    console.log("开始获取用于助力的账号列表")
+    for (let i in cookiesArr) {
+        // 将用于助力的账号加入列表
+        tools.push({id: i, assisted: false, cookie: cookiesArr[i]})
+    }
+    console.log(`用于助力的数目为 ${tools.length}`)
+    allMessage += `用于助力的数目为 ${tools.length}\n`
+
+    console.log(`根据配置，计算互助顺序`)
+    let cookieIndexOrder = []
+    if (fair_mode) {
+        // 若开启了互助模式，则车头固定在前面
+        for (let i = 0; i < chetou_number; i++) {
+            cookieIndexOrder.push(i)
+        }
+        // 后面的随机顺序
+        let otherIndexes = []
+        for (let i = chetou_number; i < cookiesArr.length; i++) {
+            otherIndexes.push(i)
+        }
+        shuffle(otherIndexes)
+        cookieIndexOrder = cookieIndexOrder.concat(otherIndexes)
+    } else {
+        let otherIndexes = []
+        // 未开启公平模式，则按照顺序互助，前面的先互助满
+        for (let idx = 0; idx < cookiesArr.length; idx++) {
+            var cookie = cookiesArr[idx];
+
+            if (kois.indexOf(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]) != -1) {
+                otherIndexes.push(idx)
+            } else {
+                cookieIndexOrder.push(idx)
+            }
+        }
+        cookieIndexOrder = otherIndexes.concat(cookieIndexOrder)
+    }
+    console.log(`最终互助顺序如下（优先互助满前面的）：\n${cookieIndexOrder}`)
+    allMessage += `本次互助顺序(车头优先，其余等概率随机，每次运行都不一样): ${cookieIndexOrder}\n\n`
+
+    console.log("开始助力")
+    // 最多尝试2*账号数目次，避免无限尝试，保底
+    let remainingTryCount = 2 * cookiesArr.length
+    let helpIndex = 0
+    while (helpIndex < cookiesArr.length && tools.length > 0 && remainingTryCount > 0) {
+        let cookieIndex = cookieIndexOrder[helpIndex]
+        try {
+            if(proxyUrl){
+                await getProxy();
+                console.log(proxy);
+            }
+            // 按需获取账号的锦鲤信息
+            let help;
+
+            let cnt=0;
+            do {
+                try {
+                    help = await getHelpInfoForCk(cookieIndex, cookiesArr[cookieIndex])
+                    cnt=10;
+                } catch (error) {
+                    // 额外捕获异常
+                    console.error(`第${cnt}次请求第${cookieIndex} 个账号信息出现错误，错误为${error}，捕获该异常，3次后进行下一个账号`)
+                    cnt++;
+                }
+            }while (cnt<3);
+            if (help) {
+                while (tools.length > 0 && remainingTryCount > 0) {
+                    console.info('')
+
+                    // 从互助列表末尾取出一个账号，用于尝试助力第一个需要互助的账号
+                    let tool = tools.pop()
+
+                    // 特殊处理自己的账号
+                    if (tool.id == help.id) {
+                        tools.unshift(tool)
+                        console.log(`跳过自己，不尝试使用本账号自己互助（因为必定失败）`)
+                        if (tools.length == 1) {
+                            // 用于互助的队列只剩下自己了，说明自己已经尝试完了，可以留着给下一个人（若有）
+                            break
+                        } else {
+                            // 还有其他的互助码，可以继续尝试本账号
+                            continue
+                        }
+                    }
+
+                    console.debug(`尝试用 ${tool.id} 账号助力 ${help.id} 账号，用于互助的账号剩余 ${tools.length}`)
+                    let helpNum=0;
+                    do {
+                        try {
+                            await helpThisUser(help, tool)
+                            helpNum=10;
+                        } catch (error) {
+                            // 额外捕获异常
+                            console.error(`尝试用 ${tool.id} 账号助力 ${help.id} 出现错误，错误为${error}，捕获该异常，跳过此账号继续执行助力~`)
+                            helpNum++;
+                        }
+                    }while (helpNum<5);
+                    if (!tool.assisted) {
+                        // 如果没有助力成功，则放入互助列表头部
+                        tools.unshift(tool)
+                    }
+                    if (help.assist_full) {
+                        console.info(`账号 ${help.id} 助力完成，累计获得 ${help.helpCount} 次互助，将尝试下一个账号`)
+                        break
+                    }
+
+                    remainingTryCount -= 1
+
+                    // 等待一会，避免频繁请求
+                    if(proxyUrl){
+                        await $.wait(1000)
+                    }else{
+                        await $.wait(45000)
+                        }
+                }
+            } else {
+                // 获取失败，跳过
+                console.info(`账号 ${cookieIndex} 获取信息失败，具体原因见上一行，将尝试下一个账号`)
+            }
+
+            await appendRewardInfoToNotify(cookieIndex, cookiesArr[cookieIndex])
+        } catch (error) {
+            // 额外捕获异常
+            console.error(`处理当前账号 ${cookieIndex} 时抛异常了，错误为${error}，捕获该异常，确保其他账号可以继续执行~`)
+        }
+
+        console.info('\n----------------------------\n')
+        helpIndex++
+    }
+
+    allMessage += "上述就是本次的幸运锦鲤啦~ 自动开红包流程没出错的话，红包应该已经领到了~不过也可以手动前往 京东app/领券/锦鲤红包 去确认~\n"
+
+    allMessage += "（请以今日0点后第一次运行的消息为准。后续运行只是为了保底，避免第一次因各种未知异常而未完成运行）"
+
+    // 发送通知
+    if ($.isNode() && allMessage) {
+        await notify.sendNotify(`${$.name}`, `${allMessage}`)
+    }
+})().catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+})
+    .finally(() => {
+        $.done();
+    })
+
+// https://stackoverflow.com/a/2450976
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}
+
+async function getHelpInfoForCk(cookieIndex, cookie) {
+    console.log(`开始请求第 ${cookieIndex} 个账号的信息`)
+    logs = await getJinliLogs()
+    if(proxyUrl){
+        if (nums % 8 == 0) {
+            await getProxy();
+            global.GLOBAL_AGENT.HTTP_PROXY = "http://" + proxy;
+        }
+        nums++;
+    }
+    // let random = logs.match(/"random":"(\d+)"/)[1].toString(), log = logs.match(/"log":"(.*)"/)[1].toString()
+    // let random = logs["random"].toString(),log =logs["log"].toString()
+    let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
+    console.log(random,log)
+    let data;
+    // 开启红包
+    data = await with_retry("开启红包活动", async () => {
+        return await requestApi('h5launch', cookie, {
+            "followShop": 0,
+            "random": random,
+            "log": log,
+            "sceneid": "JLHBhPageh5"
+        });
+    })
+
+    switch (data?.data?.result?.status) {
+        case 1://火爆
+            console.debug(`h5launch 被风控，变成黑号了, data=${JSON.stringify(data)}`)
+            return;
+        case 2://已经发起过
+            break;
+        default:
+            if (data?.data?.result?.redPacketId) {
+                // 加入help队列
+                return {
+                    redPacketId: data.data.result.redPacketId,
+                    assist_full: false,
+                    id: cookieIndex,
+                    cookie: cookie,
+                    helpCount: 0
+                }
+            }
+    }
+
+    // 已开启活动，尝试查询具体信息
+    data = await with_retry("查询红包信息", async () => {
+        return await requestApi('h5activityIndex', cookie, {
+            "isjdapp": 1
+        });
+    })
+
+    if (data?.data?.result?.redpacketConfigFillRewardInfo) {
+        // 打印今日红包概览
+        let info = data.data.result
+        let headmanNickName = "", packetTotalSum = 0;
+        if (info.redpacketInfo) {
+            headmanNickName = info.redpacketInfo.headmanNickName
+            packetTotalSum = info.redpacketInfo.packetTotalSum
+        }
+        console.info(`【京东账号${cookieIndex + 1}】 ${headmanNickName} 已获取红包 ${packetTotalSum}，剩余可拆红包为 ${calcCanTakeRedpacketCount(info)}`)
+
+        for (let packetIdx = 0; packetIdx < info.redpacketConfigFillRewardInfo.length; packetIdx++) {
+            let packetInfo = info.redpacketConfigFillRewardInfo[packetIdx]
+
+            let status = "已获取"
+            if (packetInfo.hasAssistNum < packetInfo.requireAssistNum) {
+                status = "未获取"
+            }
+
+            console.info(`红包 ${packetIdx + 1} 助力 ${packetInfo.hasAssistNum}/${packetInfo.requireAssistNum} ${status} ${packetInfo.packetAmount || "未开启"}/${packetInfo.operationWord}`)
+        }
+    }
+
+    switch (data?.data?.code) {
+        case 20002://已达拆红包数量限制
+            console.debug("已领取今天全部红包，将跳过")
+            break;
+        case 10003://活动正在进行，火爆号
+            console.debug(`h5activityIndex 被风控，变成黑号了, data=${JSON.stringify(data)}`)
+            break;
+        case 20001://红包活动正在进行，可拆
+            // 加入help队列
+            return {
+                redPacketId: data.data.result.redpacketInfo.id,
+                assist_full: false,
+                id: cookieIndex,
+                // cookie: cookie,
+                helpCount: 0
+            }
+        default:
+            break;
+    }
+}
+
+async function appendRewardInfoToNotify(cookieIndex, cookie) {
+    let data = await with_retry("查询红包信息", async () => {
+        return await requestApi('h5activityIndex', cookie, {
+            "isjdapp": 1
+        });
+    })
+
+    // 判断是否有红包可以领
+    if (calcCanTakeRedpacketCount(data?.data?.result) > 0) {
+        let info = data.data.result
+        let headmanNickName = "";
+        if (info.redpacketInfo) {
+            headmanNickName = info.redpacketInfo.headmanNickName
+        }
+
+        let canTakeCount = calcCanTakeRedpacketCount(info)
+        console.info(`【京东账号${cookieIndex + 1}】 ${headmanNickName} 剩余可拆红包为 ${canTakeCount} 个，将尝试领取`)
+        for (let packetIdx = 0; packetIdx < canTakeCount; packetIdx++) {
+            console.info(`[${packetIdx + 1}/${canTakeCount}] 尝试领取红包`)
+            await openRedPacket(cookie)
+
+            // 等待一会，避免请求过快
+            await $.wait(6000)
+        }
+
+        console.info(`领取完毕，重新查询最新锦鲤红包信息`)
+        data = await with_retry("查询红包信息", async () => {
+            return await requestApi('h5activityIndex', cookie, {
+                "isjdapp": 1
+            });
+        })
+    }
+
+    // 打印今日红包概览
+    if (data?.data?.result?.redpacketConfigFillRewardInfo) {
+        let info = data.data.result
+        let headmanNickName = "", packetTotalSum = 0;
+        if (info.redpacketInfo) {
+            headmanNickName = info.redpacketInfo.headmanNickName
+            packetTotalSum = info.redpacketInfo.packetTotalSum
+        }
+        allMessage += `【京东账号${cookieIndex + 1}】 ${headmanNickName} 已获取红包 ${packetTotalSum} 元，剩余可拆红包为 ${calcCanTakeRedpacketCount(info)} 个（如开红包流程顺利，这里应该永远是0）\n`
+
+        let totalAssistNum = 0
+        let totalRequireAssistNum = 0
+        for (let packetIdx = 0; packetIdx < info.redpacketConfigFillRewardInfo.length; packetIdx++) {
+            let packetInfo = info.redpacketConfigFillRewardInfo[packetIdx]
+
+            let status = ""
+            if (packetInfo.hasAssistNum < packetInfo.requireAssistNum) {
+                status = "未获取"
+            } else {
+                status = "已获取"
+            }
+
+            totalAssistNum += packetInfo.hasAssistNum
+            totalRequireAssistNum += packetInfo.requireAssistNum
+            allMessage += `红包 ${packetIdx + 1} 助力 ${packetInfo.hasAssistNum}/${packetInfo.requireAssistNum} ${status} ${packetInfo.packetAmount || "未开启"}/${packetInfo.operationWord}\n`
+        }
+
+        allMessage += `总计获得助力 ${totalAssistNum}/${totalRequireAssistNum}\n`
+
+        allMessage += `\n`
+    }
+}
+
+function calcCanTakeRedpacketCount(info) {
+    if (!info?.redpacketConfigFillRewardInfo) {
+        return 0
+    }
+
+    let count = 0
+    for (let packetIdx = 0; packetIdx < info.redpacketConfigFillRewardInfo.length; packetIdx++) {
+        let packetInfo = info.redpacketConfigFillRewardInfo[packetIdx]
+
+        if (packetInfo.hasAssistNum >= packetInfo.requireAssistNum && !packetInfo.packetAmount) {
+            count++
+        }
+    }
+
+    return count
+}
+
+async function with_retry(ctx = "", callback_func, max_retry_times = 3, retry_interval = 5000) {
+    let data;
+
+    // 尝试开启今日的红包活动
+    for (let tryIdex = 1; tryIdex <= max_retry_times; tryIdex++) {
+        if (tryIdex > 1) {
+            console.debug(`[${tryIdex}/${max_retry_times}] 重新尝试 ${ctx}`)
+        }
+
+        data = await callback_func()
+        if (data) {
+            break
+        }
+
+        console.error(`[${tryIdex}/${max_retry_times}] ${ctx} 请求时似乎出错了，有可能是网络波动，将等待 ${retry_interval / 1000} 秒，最多试 ${max_retry_times} 次\n`)
+        await wait(retry_interval)
+    }
+
+    return data
+}
+
+async function openRedPacket(cookie) {
+    logs = await getJinliLogs()
+    let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
+    // let random = logs["random"].toString(),log =logs["log"].toString()
+    // https://api.m.jd.com/api?appid=jinlihongbao&functionId=h5receiveRedpacketAll&loginType=2&client=jinlihongbao&t=1638189287348&clientVersion=10.2.4&osVersion=-1
+    let resp = await requestApi('h5receiveRedpacketAll', cookie, {
+        "random": random,
+        "log": log,
+        "sceneid": "JLHBhPageh5"
+    });
+    if (resp?.data?.biz_code == 0) {
+        console.info(`领取到 ${resp.data.result?.discount} 元红包`)
+    } else {
+        console.error(`领取红包失败，结果为 ${JSON.stringify(resp)}`)
+    }
+}
+
+async function helpThisUser(help, tool) {
+    logs = await getJinliLogs()
+    var num = "";
+    // let random = logs["random"].toString(),log =logs["log"].toString()
+    let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
+    if (proxyUrl){
+        if (nums % 8 == 0) {
+            await getProxy();
+            console.log(proxy);
+            global.GLOBAL_AGENT.HTTP_PROXY = "http://" + proxy;
+        }
+        nums++;
+    }
+    body={"redPacketId": help.redPacketId,"followShop": 0,"random": random,"log": log,"sceneid":"JLHBhPageh5"}
+    // 实际发起请求
+    await requestApi('jinli_h5assist', tool.cookie, body).then(async function (data) {
+        let desc = data?.data?.result?.statusDesc
+        if (desc) {
+            if (desc.indexOf("助力成功") != -1) {
+                help.helpCount += 1
+                tool.assisted = true
+            } else if (desc.indexOf("TA的助力已满") != -1) {
+                help.assist_full = true
+            } else {
+                // 不能重复为好友助力哦
+                // 今日助力次数已满
+                // 活动太火爆啦~去看看其他活动吧~
+                tool.assisted = true
+            }
+        } else {
+            // undefined
+            tool.assisted = true
+        }
+        console.log(`${tool.id}->${help.id}`, desc)
+        if (!desc) {
+            if(proxyUrl){
+                await getProxy();
+                console.log(proxy);
+            }
+            if(proxyUrl){
+                await $.wait(500);
+            }else {
+                await $.wait(6000);
+            }
+            helpThisUser(help, tool);
+        }
+    })
+}
+
+async function requestApi(functionId, cookie, body = {}) {
+    return new Promise(resolve => {
+        $.post({
+            url: `${JD_API_HOST}/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&clientVersion=10.2.4&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
+            headers: {
+                "Cookie": cookie,
+                "origin": "https://h5.m.jd.com",
+                "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
+                'Content-Type': 'application/x-www-form-urlencoded',
+                "X-Requested-With": "com.jingdong.app.mall",
+                "User-Agent": ua,
+            },
+            body: `body=${escape(JSON.stringify(body))}`,
+        }, (_, resp, data) => {
+            try {
+                data = JSON.parse(data)
+            } catch (e) {
+                $.logErr('Error: ', e, resp)
+                console.warn(`请求${functionId}失败，data=${JSON.stringify(data)}, e=${JSON.stringify(e)}`)
+            } finally {
+                resolve(data)
+            }
+        })
+    })
+}
+
+async function requireConfig() {
+    return new Promise(resolve => {
+        notify = $.isNode() ? require('./sendNotify') : '';
+        const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+        if ($.isNode()) {
+            Object.keys(jdCookieNode).forEach((item) => {
+                if (jdCookieNode[item]) {
+                    cookiesArr.push(jdCookieNode[item])
+                }
+            })
+            if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+            };
+        } else {
+            cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
+        }
+        console.log(`共${cookiesArr.length}个京东账号\n`)
+        resolve()
+    })
+}
+function getJinliLogs() {
+    if (jdPandaToken && RabbitUrl){
+           let nums = Math.floor(Math.random() * 9)+1;
+            if (nums<5){
+                console.info('随机获取本地log!')
+                return pandaLogs();
+            }else {
+                console.info('随机获取本地log!')
+                return rabbitLogs();
+            }
+    }
+    if(jdPandaToken && !RabbitUrl){
+        console.info('随机获取本地log!')
+        return pandaLogs();
+    }
+    if(RabbitUrl && !jdPandaToken){
+        console.info('随机获取本地log!')
+        return rabbitLogs();
+    }
+    return '';
+}
+function pandaLogs_orgin(){
+    var logs = '';
+    return new Promise((resolve) => {
+        let url = {
+            url: "https://api.jds.codes/jd/log",
+            followRedirect: false,
+            headers: {
+                'Accept': '*/*',
+                "accept-encoding": "gzip, deflate, br",
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jdPandaToken
+            },
+            timeout: 30000
+        }
+        $.get(url, async(err, resp, data) => {
+            try {
+                data = JSON.parse(data);
+                if (data && data.code == 200) {
+                    lnrequesttimes = data.request_times;
+                    console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
+                    if (data.data)
+                        logs = data.data || '';
+                    console.info(logs['random']+"----"+logs['log'])
+                    if (logs != '')
+                        resolve(logs);
+                    else
+                        console.log("签名获取失败,可能Token使用次数上限或被封.");
+                } else {
+                    console.log("签名获取失败.");
+                }
+
+            }catch (e) {
+                $.logErr(e, resp);
+            }finally {
+                resolve(logs);
+            }
+        })
+    })
+}
+function pandaLogs(){
+    var logs = '';
+    return new Promise((resolve) => {
+        logs = x.jinli_logs[getRandomNumberByRange(0, x.jinli_logs.length - 1)]
+        // let random = log.match(/"random":"(\d+)"/)[1], log1 = log.match(/"log":"(.*)"/)[1]
+        if (logs != '') {
+            console.info(logs);
+            resolve(logs);
+        } else {
+            console.log("签名获取失败.");
+        }
+    })
+}
+function rabbitLogs(){
+    var logs = '';
+    return new Promise((resolve) => {
+        let url = {
+            url:`${RabbitUrl}`,
+            followRedirect: false,
+            timeout: 30000
+        }
+        $.get(url, async(err, resp, data) => {
+            try {
+                data = JSON.parse(data);
+                if (data && data.status == 0) {
+                    lnrequesttimes = data.request_times;
+                    logs = {
+                        random: data.random,
+                        log: data.log
+                    }
+                    console.info(logs['random']+"----"+logs['log'])
+                    if (logs != '')
+                        resolve(logs);
+                    else
+                        console.log("log获取失败.");
+                } else {
+                    console.log("log获取失败.");
+                }
+
+            }catch (e) {
+                $.logErr(e, resp);
+            }finally {
+                resolve(logs);
+            }
+        })
+    })
+}
+// 获取代理
+function getProxy() {
+    return new Promise(async (resolve) => {
+        $.get(
+            {
+                url: proxyUrl,
+                timeout: {
+                    request: 5000,
+                },
+            },
+            (err, data) => {
+                if (data) {
+                    try {
+                        let reg =
+                            /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}:[1-9]\d*/g;
+                        let p = reg.exec(data.body);
+                        proxy = p[0];
+                        global.GLOBAL_AGENT.HTTP_PROXY = "http://" + proxy;
+                    } catch (err) {
+                    } finally {
+                        resolve();
+                    }
+                }
+            }
+        );
+    });
+}
+function randomString(e) {
+    e = e || 32;
+    let t = "abcdefhijkmnprstwxyz2345678",
+        a = t.length,
+        n = "";
+    for (let i = 0; i < e; i++)
+        n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
+function getRandomNumberByRange(start, end) {
+  return Math.floor(Math.random() * (end - start) + start)
+}
 function Env(t,e){"undefined"!=typeof process&&JSON.stringify(process.env).indexOf("GITHUB")>-1&&process.exit(0);class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`🔔${this.name}, 开始!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),n={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(n,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?(this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)})):this.isQuanX()?(this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t))):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();s&&this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)}))}post(t,e=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.post(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method="POST",this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){this.initGotEnv(t);const{url:s,...i}=t;this.got.post(s,i).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)})}}time(t,e=null){const s=e?new Date(e):new Date;let i={"M+":s.getMonth()+1,"d+":s.getDate(),"H+":s.getHours(),"m+":s.getMinutes(),"s+":s.getSeconds(),"q+":Math.floor((s.getMonth()+3)/3),S:s.getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,(s.getFullYear()+"").substr(4-RegExp.$1.length)));for(let e in i)new RegExp("("+e+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?i[e]:("00"+i[e]).substr((""+i[e]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl;return{"open-url":e,"media-url":s}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};if(this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r))),!this.isMuteLog){let t=["","==============📣系统通知📣=============="];t.push(e),s&&t.push(s),i&&t.push(i),console.log(t.join("\n")),this.logs=this.logs.concat(t)}}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`❗️${this.name}, 错误!`,t.stack):this.log("",`❗️${this.name}, 错误!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`🔔${this.name}, 结束! 🕛 ${s} 秒`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}
