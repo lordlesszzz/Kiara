@@ -48,7 +48,7 @@ let notify, allMessage = '';
 
 !(async () => {
     await requireConfig()
-    console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
+  //console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
     console.log(`当前配置的车头数目：${chetou_number}，是否开启公平模式：${fair_mode}`)
     console.log("开始获取用于助力的账号列表")
     for (let i in cookiesArr) {
