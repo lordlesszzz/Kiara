@@ -1,5 +1,5 @@
 /*
-锦鲤红包
+愤怒的锦鲤
 更新时间：2022-04-18
 备注：在kois环境变量中填入需要助力的pt_pin，有多个请用@符号连接
 
@@ -225,7 +225,7 @@ async function getHelpInfoForCk(cookieIndex, cookie) {
     // let random = logs.match(/"random":"(\d+)"/)[1].toString(), log = logs.match(/"log":"(.*)"/)[1].toString()
     // let random = logs["random"].toString(),log =logs["log"].toString()
     let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
-    console.log(random,log)
+  //console.log(random,log)
     let data;
     // 开启红包
     data = await with_retry("开启红包活动", async () => {
