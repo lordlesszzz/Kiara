@@ -58,7 +58,7 @@ let notify, allMessage = '';
     console.log(`用于助力的数目为 ${tools.length}`)
     allMessage += `用于助力的数目为 ${tools.length}\n`
 
-    console.log(`根据配置，计算互助顺序`)
+  //console.log(`根据配置，计算互助顺序`)
     let cookieIndexOrder = []
     if (fair_mode) {
         // 若开启了互助模式，则车头固定在前面
@@ -86,7 +86,7 @@ let notify, allMessage = '';
         }
         cookieIndexOrder = otherIndexes.concat(cookieIndexOrder)
     }
-    console.log(`最终互助顺序如下（优先互助满前面的）：\n${cookieIndexOrder}`)
+  //console.log(`最终互助顺序如下（优先互助满前面的）：\n${cookieIndexOrder}`)
     allMessage += `本次互助顺序(车头优先，其余等概率随机，每次运行都不一样): ${cookieIndexOrder}\n\n`
 
     console.log("开始助力")
