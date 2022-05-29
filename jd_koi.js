@@ -16,7 +16,7 @@ export Rabbit_Url ="" 任选一，填一个但是不会真的在线获取
 
 let x = require('./utils/koi_log.js')
 // console.log(x.jinli_logs)
-const $ = new Env("锦鲤红包-JS")
+const $ = new Env("愤怒的锦鲤")
 require("global-agent/bootstrap");
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
