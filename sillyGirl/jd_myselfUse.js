@@ -1,6 +1,7 @@
 /**
 * @author camelot
 * @rule t?
+* @public true
 * @admin true
 **/
 
