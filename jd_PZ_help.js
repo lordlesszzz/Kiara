@@ -10,7 +10,7 @@ if (process.env.JD_19E != "true") {
 export PZ="助力码"
 */
 
-const $ = new Env('热爱奇旅膨胀内部互助');
+const $ = new Env('618膨胀内部互助');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '', message;
 let secretp='',inviteId=[]
