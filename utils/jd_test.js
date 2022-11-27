@@ -5,7 +5,7 @@
 
 const $ = new Env('测试')
 
-console.log(process.env.testCk)
+console.log(`\n${process.env.testCk}`)
 
 
 
