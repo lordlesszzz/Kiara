@@ -53,6 +53,7 @@ function getOilPrice(i) {
   return new Promise((resolve) => {
     let req = {
       url: `https://apis.tianapi.com/oilprice/index`,
+      headers : {},
       body : {
         key : testCkArr[i],
         prov : city[randomInt(0, city.length - 1)]
