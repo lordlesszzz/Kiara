@@ -51,22 +51,25 @@ let city = ['北京', '上海', '重庆', '福建', '河南']
 
 function getOilPrice(i) {
   return new Promise((resolve) => {
-    let body = {           
-      key : testCkArr[i],           
-      prov : city[randomInt(0, city.length - 1)]       
-    }
+    // let body = {
+    //   key: testCkArr[i],
+    //   prov: city[randomInt(0, city.length - 1)]
+    // }
 
     let req = {
       url: `https://apis.tianapi.com/oilprice/index`,
-      body : JSON.stringify(body) 
+      json: { 
+        key: testCkArr[i], 
+        prov: city[randomInt(0, city.length - 1)] 
+      }
     }
     $.post(req, async (err, response, data) => {
       try {
-        console.log(`\n${data}\n`)       
+        console.log(`\n${data}\n`)
         // console.log(response)
-      } catch(err) {
+      } catch (err) {
         $.log(err)
-      } finally{
+      } finally {
         resolve()
       }
     })
