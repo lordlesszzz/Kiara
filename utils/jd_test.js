@@ -54,8 +54,8 @@ function getOilPrice(i) {
     let req = {
       url: `https://apis.tianapi.com/oilprice/index`,
       body : {
-        key : testCkArr[i],
-        prov : city[randomInt(0, city.length - 1)]
+        key : 'f954aa27bc8aa0ac302bfa45c0a13ce5'//testCkArr[i],
+        prov : '河南'//city[randomInt(0, city.length - 1)]
       }
     }
     $.post(req, async (err, response, data) => {
