@@ -19,7 +19,7 @@ let city = ['北京', '上海', '重庆', '福建', '河南']
   console.log(`\n共${testCkArr.length}个账号`)
 
   for (let i = 0; i < testCkArr.length; i++) {
-    console.log(`\n==== 开始执行第${i + 1}个账号 ====\n`)
+    console.log(`\n==== 开始执行第${i + 1}个账号 ====`)
 
     console.log(`\n==== 获取油价 ====`)
     await getOilPrice(i)
@@ -52,8 +52,8 @@ let city = ['北京', '上海', '重庆', '福建', '河南']
 function getOilPrice(i) {
   return new Promise((resolve) => {
     let body = {           
-      key : 'f954aa27bc8aa0ac302bfa45c0a13ce5',//testCkArr[i],           
-      prov : '河南'//city[randomInt(0, city.length - 1)]       
+      key : testCkArr[i],           
+      prov : city[randomInt(0, city.length - 1)]       
     }
 
     let req = {
