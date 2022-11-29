@@ -14,7 +14,7 @@ let city = ['北京', '上海', '广州', '深圳', '郑州']
 !(async () => {
   if (!await handleCookies()) return
 
-  console.log(`\n=========================================    \n脚本执行 - 北京时间(UTC+8)：${new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000).toLocaleString()} \n=========================================\n`)
+  console.log(`\n=========================================    \n脚本执行 - 北京时间(UTC+8)：${new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000).toLocaleString()} \n=========================================`)
 
   console.log(`\n共${testCkArr.length}个账号`)
 
