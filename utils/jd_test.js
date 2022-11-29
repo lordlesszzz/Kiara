@@ -51,14 +51,14 @@ let city = ['北京', '上海', '重庆', '福建', '河南']
 
 function getOilPrice(i) {
   return new Promise((resolve) => {
+    let body = {           
+      key : 'f954aa27bc8aa0ac302bfa45c0a13ce5',//testCkArr[i],           
+      prov : '河南'//city[randomInt(0, city.length - 1)]       
+    }
+    
     let req = {
       url: `https://apis.tianapi.com/oilprice/index`,
-      body : {
-        body: {
-          key : 'f954aa27bc8aa0ac302bfa45c0a13ce5',//testCkArr[i],
-          prov : '河南'//city[randomInt(0, city.length - 1)]
-        }
-      }
+      body : JSON.stringify(body) 
     }
     $.post(req, async (err, response, data) => {
       try {
