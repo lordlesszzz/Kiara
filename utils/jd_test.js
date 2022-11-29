@@ -22,7 +22,7 @@ let city = ['北京', '上海', '广州', '深圳', '郑州']
     console.log(`\n==== 开始执行第${i + 1}个账号 ====`)
 
     console.log(`\n==== 获取油价 ====`)
-    await getOilPrice()
+    await getOilPrice(i)
 
   }
 })().catch(err => {
@@ -31,10 +31,10 @@ let city = ['北京', '上海', '广州', '深圳', '郑州']
   $.done()
 })
 
-function getOilPrice() {
+function getOilPrice(i) {
   return new Promise((resolve) => {
     let req = {
-      url: `https://apis.tianapi.com/oilprice/index?key=${testCk}&prov=${city[randomInt(0, city.length - 1)]}`
+      url: `https://apis.tianapi.com/oilprice/index?key=${testCkArr[i]}&prov=${city[randomInt(0, city.length - 1)]}`
     }
     $.get(req, async (err, response, data) => {
       try {
