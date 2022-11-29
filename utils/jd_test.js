@@ -9,7 +9,7 @@ let testCk = process.env.testCk
 let testCkArr = []
 // console.log(`\n${process.env.testCk}`)
 
-let city = ['北京', '上海', '广州', '深圳', '郑州']
+let city = ['北京', '上海', '重庆', '福建', '河南']
 
 !(async () => {
   if (!await handleCookies()) return
@@ -19,7 +19,7 @@ let city = ['北京', '上海', '广州', '深圳', '郑州']
   console.log(`\n共${testCkArr.length}个账号`)
 
   for (let i = 0; i < testCkArr.length; i++) {
-    console.log(`\n==== 开始执行第${i + 1}个账号 ====`)
+    console.log(`\n==== 开始执行第${i + 1}个账号 ====\n`)
 
     console.log(`\n==== 获取油价 ====`)
     await getOilPrice(i)
@@ -31,12 +31,34 @@ let city = ['北京', '上海', '广州', '深圳', '郑州']
   $.done()
 })
 
+// function getOilPrice(i) {
+//   return new Promise((resolve) => {
+//     let req = {
+//       url: `https://apis.tianapi.com/oilprice/index?key=${testCkArr[i]}&prov=${city[randomInt(0, city.length - 1)]}`
+//     }
+//     $.get(req, async (err, response, data) => {
+//       try {
+//         console.log(`\n${data}\n`)       
+//         console.log(response.rawBody)
+//       } catch(err) {
+//         $.log(err)
+//       } finally{
+//         resolve()
+//       }
+//     })
+//   })
+// }
+
 function getOilPrice(i) {
   return new Promise((resolve) => {
     let req = {
-      url: `https://apis.tianapi.com/oilprice/index?key=${testCkArr[i]}&prov=${city[randomInt(0, city.length - 1)]}`
+      url: `https://apis.tianapi.com/oilprice/index`,
+      body : {
+        key : testCkArr[i],
+        prov : city[randomInt(0, city.length - 1)]
+      }
     }
-    $.get(req, async (err, response, data) => {
+    $.post(req, async (err, response, data) => {
       try {
         console.log(`\n${data}\n`)       
         console.log(response.rawBody)
