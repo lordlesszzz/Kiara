@@ -9,7 +9,7 @@ let testCk = process.env.testCk
 let testCkArr = []
 // console.log(`\n${process.env.testCk}`)
 
-let city = [北京, 上海, 广州, 深圳, 郑州]
+let city = ['北京', '上海', '广州', '深圳', '郑州']
 
 !(async () => {
   if (!await handleCookies()) return
