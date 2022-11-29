@@ -38,7 +38,7 @@ function getOilPrice(i) {
     }
     $.get(req, async (err, response, data) => {
       try {
-        console.log(`\n${data}`)       
+        console.log(`\n${data}\n`)       
         console.log(response.rawBody)
       } catch(err) {
         $.log(err)
