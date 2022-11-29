@@ -58,7 +58,10 @@ function getOilPrice(i) {
 
     let req = {
       url: `https://apis.tianapi.com/oilprice/index`,
-      json: { 
+      headers : {
+        'Content-Type' : 'application/x-www-form-urlencoded'
+      },
+      body : { 
         key: testCkArr[i], 
         prov: city[randomInt(0, city.length - 1)] 
       }
