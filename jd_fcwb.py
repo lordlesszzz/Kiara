@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 cron: 11 11 10 11 * jd_fcwb.py
-new Env('发财挖宝');
+new Env('发财挖宝-自动挖');
 活动入口: 京东极速版 > 我的 > 发财挖宝
 最高可得总和为10元的微信零钱和红包
 脚本功能为: 挖宝，提现，没有助力功能，当血量剩余 1 时停止挖宝，领取奖励并提现 
@@ -11,6 +11,8 @@ new Env('发财挖宝');
 '''
 import os,json,random,time,re,string,functools,asyncio
 import sys
+from functools import partial
+print = partial(print, flush=True)
 sys.path.append('../../tmp')
 print('\n运行本脚本之前请手动进入游戏点击一个方块\n')
 print('\n挖的如果都是0.01红包就是黑了，别挣扎了！\n')
