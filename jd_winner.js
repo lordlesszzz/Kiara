@@ -39,8 +39,9 @@ let helpinfo = {};
 		$.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
 		return;
 	}
-	console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
-	console.log('\n运行流程：助力--领取任务奖励！！！\n')
+	// console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
+	// console.log('\n运行流程：助力--领取任务奖励！！！\n')
+	console.log('\n-------脚本功能：得助力码，领取任务奖励-------\n')
 	// for (let i = 0; i < cookiesArr.length; i++) {
 	//     if (cookiesArr[i]) {
 	//         cookie = cookiesArr[i];
@@ -67,38 +68,38 @@ let helpinfo = {};
 	//     }
 
 	// }
-	if (shareId.length > 0) {
-		console.log('\n\n开始助力...')
-		$.index = 1;
-		$.fullhelp = false;
-		let k = 0;
-		let m = cookiesArr.length;
-		for (let j = 0; j < shareId.length; j++) {
-			console.log('\n去助力--> ' + shareId[j]);
-			helpnum = 0;
-			if ($.index === m) { console.log('已无账号可用于助力！结束\n'); break };
-			for (let i = k; i < m; i++) {
-				if (helpnum == 10) { console.log('助力已满，跳出！\n'); k = i; break };
-				if ($.fullhelp) { console.log('助力已满，跳出！\n'); k = i - 1; break };
-				if (cookiesArr[i]) {
-					cookie = cookiesArr[i];
-					$.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-					$.index = i + 1;
-					helpinfo[$.UserName] = {};
-					UA = require('./USER_AGENTS').UARAM();
-					helpinfo[$.UserName].ua = UA;
-					console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
-					if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
-					//if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
-					await help(shareId[j]);
-					//console.log('随机等待1-2秒');
-					await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
-				}
-			}
-		}
-	} else {
-		console.log('无助立马请设置！！\n')
-	}
+	// if (shareId.length > 0) {
+	// 	console.log('\n\n开始助力...')
+	// 	$.index = 1;
+	// 	$.fullhelp = false;
+	// 	let k = 0;
+	// 	let m = cookiesArr.length;
+	// 	for (let j = 0; j < shareId.length; j++) {
+	// 		console.log('\n去助力--> ' + shareId[j]);
+	// 		helpnum = 0;
+	// 		if ($.index === m) { console.log('已无账号可用于助力！结束\n'); break };
+	// 		for (let i = k; i < m; i++) {
+	// 			if (helpnum == 10) { console.log('助力已满，跳出！\n'); k = i; break };
+	// 			if ($.fullhelp) { console.log('助力已满，跳出！\n'); k = i - 1; break };
+	// 			if (cookiesArr[i]) {
+	// 				cookie = cookiesArr[i];
+	// 				$.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+	// 				$.index = i + 1;
+	// 				helpinfo[$.UserName] = {};
+	// 				UA = require('./USER_AGENTS').UARAM();
+	// 				helpinfo[$.UserName].ua = UA;
+	// 				console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
+	// 				if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
+	// 				//if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
+	// 				await help(shareId[j]);
+	// 				//console.log('随机等待1-2秒');
+	// 				await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
+	// 			}
+	// 		}
+	// 	}
+	// } else {
+	// 	console.log('无助立马请设置！！\n')
+	// }
 
 	console.log('开始领取任务奖励...')
 
