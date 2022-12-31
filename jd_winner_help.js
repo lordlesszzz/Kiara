@@ -6,7 +6,7 @@ CK1助力作者
 运行流程：助力--领取任务奖励！！！
 助理码变量：多个用&号隔开
 DYJSHAREID = 'xxx&xxx&xxx'
-10 10 10 10 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
+4 0,20 0,1 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
 By: https://github.com/6dylan6/jdpro
 updatetime: 2022/12/16 修复
  */
