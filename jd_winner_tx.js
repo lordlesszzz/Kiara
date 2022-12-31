@@ -1,7 +1,7 @@
 /*
 赚钱大赢家提现
 
-58 59 23 * * * jd_makemoneyshop_reward.js
+58 59 23 * * * jd_winner_tx.js
 
 默认不执行
 默认只执行1个ck,多账号请单独指定ck
