@@ -12,7 +12,7 @@ By: https://github.com/6dylan6/jdpro
 updatetime: 2022/12/2 
  */
 
-const $ = new Env('赚钱大赢家');
+const $ = new Env('大赢家领奖励');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
