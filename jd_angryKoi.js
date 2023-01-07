@@ -33,23 +33,25 @@ let cookiesArr = []
 let scriptsLogArr = []
 var tools = []
 let logs;
+let random = ''
+let log = ''
 
 let notify, allMessage = '';
 
 !(async () => {
     await requireConfig()
-    let res = await getJinliLogs(koiLogUrl)
-    scriptsLogArr = [...(res || []), ...scriptsLogArr]
-    console.log(`共${scriptsLogArr.length}个助力log\n`)
-    if (scriptsLogArr.length == 0){
-        console.log(`log为空,脚本停止运行！`)
-        return
-    }
+    // let res = await getJinliLog()
+    // scriptsLogArr = [...(res || []), ...scriptsLogArr]
+    // console.log(`共${scriptsLogArr.length}个助力log\n`)
+    // if (scriptsLogArr.length == 0){
+    //     console.log(`log为空,脚本停止运行！`)
+    //     return
+    // }
     // console.log(`\n 锦鲤红包助力log需要手动抓取 \n`)
     // console.log(`\n 拿你小号口令助力抓包,搜关键字 jinli_h5assist 查看请求文本里，再通过URL转码（推荐 https://tool.chinaz.com/tools/urlencode.aspx）拿到对应参数,青龙环境变量里添加 logs \n`)
     // console.log(`\n 示例: logs 值 "random":"75831714","log":"1646396568418~1jD94......太长省略...Qwt9i"\n`)
     console.log(`当前配置的车头数目：${chetou_number}，是否开启公平模式：${fair_mode}`)
-    console.log("开始获取用于助力的账号列表")
+    console.log("开始获取用于助力的账号列表...")
     for (let i in cookiesArr) {
         // 将用于助力的账号加入列表
         tools.push({id: i, assisted: false, cookie: cookiesArr[i]})
@@ -95,6 +97,8 @@ let notify, allMessage = '';
     while (helpIndex < cookiesArr.length && tools.length > 0 && remainingTryCount > 0) {
         let cookieIndex = cookieIndexOrder[helpIndex]
         try {
+
+
             if(proxyUrl){
                 await getProxy();
             }
@@ -191,7 +195,7 @@ function shuffle(array) {
 
 async function getHelpInfoForCk(cookieIndex, cookie) {
     console.log(`开始请求第 ${cookieIndex} 个账号的信息`)
-    logs = await getLog()
+    logs = await getJinLiLog(cookie)
     if(proxyUrl){
         if (nums % 8 == 0) {
             await getProxy();
@@ -403,8 +407,8 @@ async function openRedPacket(cookie) {
 }
 
 async function helpThisUser(help, tool) {
-    logs = await getLog()
-    let random = logs.substring(10,18),log = logs.substring(27,logs.length-1)
+    // logs = await getJinLiLog()
+    // let random = logs.substring(10,18),log = logs.substring(27,logs.length-1)
     body={"redPacketId": help.redPacketId,"followShop": 0,"random": random,"log": log,"sceneid":"JLHBhPageh5"}
     // 实际发起请求
     await requestApi('jinli_h5assist', tool.cookie, body).then(function (data) {
@@ -481,6 +485,35 @@ async function requireConfig() {
         resolve()
     })
 }
+
+function getJinLiLog(cookie) {   
+  return new Promise(resolve => {     
+    let opts = {            
+      url : 'https://jinli.shoujiyanxishe.tk/api/jlhb',           
+      json : {                
+        pin : cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1] || ''           
+      }        
+    }        
+    $.post(opts, (err, resp, data) => {            
+      try {               
+        if (err) {           
+          console.log(`${$.toStr(err)}`)           
+          console.log(`${$.name} 连接服务器 API请求失败，请检查网路重试`)         
+        } else {           
+          data = JSON.parse(data)           
+          // console.log(data)           
+          random = data.randomNum           
+          log = data.log         
+        }        
+      } catch(e) {               
+        $.logErr(e)       
+      } finally {                
+        resolve()            
+      }        
+    })   
+  }) 
+}
+
 function getJinliLogs(url) {
     return new Promise(async resolve => {
         const options = {
