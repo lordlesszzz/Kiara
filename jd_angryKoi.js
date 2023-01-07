@@ -196,6 +196,7 @@ function shuffle(array) {
 async function getHelpInfoForCk(cookieIndex, cookie) {
     console.log(`开始请求第 ${cookieIndex} 个账号的信息`)
     logs = await getJinLiLog(cookie)
+    console.log(`\n${logs}`)
     if(proxyUrl){
         if (nums % 8 == 0) {
             await getProxy();
@@ -204,7 +205,7 @@ async function getHelpInfoForCk(cookieIndex, cookie) {
         nums++;
     }
     // let random = logs.substring(10,18),log = logs.substring(27,logs.length-1)
-    let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
+    // let random = decodeURIComponent(logs.match(/"random":"(\d+)"/)[1]),log = decodeURIComponent(logs.match(/"log":"(.*)"/)[1])
     let data;
     // 开启红包
     data = await with_retry("开启红包活动", async () => {
@@ -509,7 +510,7 @@ function getJinLiLog(cookie) {
       } catch(e) {               
         $.logErr(e)       
       } finally {                
-        resolve()            
+        resolve(data)            
       }        
     })   
   }) 
