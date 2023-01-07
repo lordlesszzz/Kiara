@@ -463,7 +463,7 @@ async function requireConfig() {
     return new Promise(resolve => {
         notify = $.isNode() ? require('./sendNotify') : '';
         const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-        const scriptsLog = $.isNode() ? require('./ql_jlhb_log.js') : '';
+        // const scriptsLog = $.isNode() ? require('./ql_jlhb_log.js') : '';
         if ($.isNode()) {
             Object.keys(jdCookieNode).forEach((item) => {
                 if (jdCookieNode[item]) {
