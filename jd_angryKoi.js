@@ -437,7 +437,7 @@ async function helpThisUser(help, tool) {
 async function requestApi(functionId, cookie, body = {}) {
     return new Promise(resolve => {
         $.post({
-            url: `${JD_API_HOST}/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&clientVersion=10.2.4&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
+            url: `${JD_API_HOST}/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&clientVersion=11.3.0&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
             headers: {
                 "Cookie": cookie,
                 "origin": "https://h5.m.jd.com",
@@ -446,7 +446,7 @@ async function requestApi(functionId, cookie, body = {}) {
                 "X-Requested-With": "com.jingdong.app.mall",
                 "User-Agent": ua,
             },
-            body: `body=${escape(JSON.stringify(body))}`,
+            body: `body=${JSON.stringify(body)}`,
         }, (_, resp, data) => {
             try {
                 data = JSON.parse(data)
