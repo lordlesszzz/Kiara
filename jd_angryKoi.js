@@ -464,6 +464,7 @@ async function requireConfig() {
         notify = $.isNode() ? require('./sendNotify') : '';
         const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
         // const scriptsLog = $.isNode() ? require('./ql_jlhb_log.js') : '';
+        const scriptsLog = ''
         if ($.isNode()) {
             Object.keys(jdCookieNode).forEach((item) => {
                 if (jdCookieNode[item]) {
