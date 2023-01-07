@@ -124,19 +124,19 @@ let notify, allMessage = '';
                         }
                     }
 
-                    console.debug(`尝试用 ${tool.id + 1} 账号助力 ${help.id + 1} 账号，用于互助的账号剩余 ${tools.length}`)
+                    console.debug(`尝试用 ${tool.id} 账号助力 ${help.id} 账号，用于互助的账号剩余 ${tools.length}`)
                    try{
                        await helpThisUser(help, tool)
                    }catch (error) {
                        // 额外捕获异常
-                       console.error(`尝试用 ${tool.id + 1} 账号助力 ${help.id + 1} 出现错误，错误为${error}，捕获该异常，跳过此账号继续执行助力~`)
+                       console.error(`尝试用 ${tool.id} 账号助力 ${help.id} 出现错误，错误为${error}，捕获该异常，跳过此账号继续执行助力~`)
                    }
                     if (!tool.assisted) {
                         // 如果没有助力成功，则放入互助列表头部
                         tools.unshift(tool)
                     }
                     if (help.assist_full) {
-                        console.info(`账号 ${help.id  + 1} 助力完成，累计获得 ${help.helpCount} 次互助，将尝试下一个账号`)
+                        console.info(`账号 ${help.id} 助力完成，累计获得 ${help.helpCount} 次互助，将尝试下一个账号`)
                         break
                     }
 
