@@ -58,13 +58,13 @@ if ($.isNode()) {
         let res = await tyHelp(i)
         if (res.msg == '好友红包已被领光了') {
           tyShareCodesArr.splice(i, 1)
-          if (tyShareCodesArr.length < 0) {
+          if (tyShareCodesArr.length == 0) {
             console.log(`\n已全部助力完成，退出`)
             return
           } 
           continue
         } else if (res.code == -130) {
-          console.log(`活动太火爆了，快去买买买吧~`)
+          // console.log(`活动太火爆了，快去买买买吧~`)
           break
         }       
       }
@@ -115,7 +115,7 @@ function tyHelp(i) {
           } else if (data.msg == '好友红包已被领光了') {
               console.log(`助力已满，跳出`)
           } else {
-            console.log(data)
+            console.log(data.msg)
           }
         }
       } catch(e) {
