@@ -27,7 +27,7 @@ if ($.isNode()) {
     return;
   }
   if (!shareCodesFormat()) {
-    console.log(`请填写变量tyShareCodes：\n格式为：export tyShareCodes="助力码1&助力码2..."`)
+    console.log(`请填写变量tyShareCodes\n格式为：export tyShareCodes="助力码1&助力码2..."`)
     return
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -55,7 +55,7 @@ if ($.isNode()) {
       }
       for(let i = 0; i < tyShareCodesArr.length; i++) {
         console.log(`开始助力 => ${tyShareCodesArr[i]}`)
-        let res = await tyHelp()
+        let res = await tyHelp(i)
         if (res.msg == '好友红包已被领光了') {
           tyShareCodesArr.splice(i, 1)
           continue
@@ -69,10 +69,10 @@ if ($.isNode()) {
   $.done()
 })
 
-function tyHelp() {
+function tyHelp(i) {
   return new Promise(async resolve => {
     let opts = {
-      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${tyShareCodesArr[0]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
+      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${tyShareCodesArr[i]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
       headers : {
         'Origin': 'https://wbbny.m.jd.com',
         'Referer': 'https://wbbny.m.jd.com/',
