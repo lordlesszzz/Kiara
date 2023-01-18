@@ -27,7 +27,7 @@ if ($.isNode()) {
     return;
   }
   if (!shareCodesFormat()) {
-    console.log(`\n请填写变量：export tyShareCodes="助力码1&助力码2..."`)
+    console.log(`请填写变量tyShareCodes：\n格式为：export tyShareCodes="助力码1&助力码2..."`)
     return
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -53,10 +53,14 @@ if ($.isNode()) {
         // }
         continue
       }
-      
-      console.log('开始助力')
-      await getLog()
-      await znsHelp()
+      for(let i = 0; i < tyShareCodesArr.length; i++) {
+        console.log(`开始助力 => ${tyShareCodesArr[i]}`)
+        let res = await tyHelp()
+        if (res.msg == '好友红包已被领光了') {
+          tyShareCodesArr.splice(i, 1)
+          continue
+        }
+      }
     }
   }
 })().catch((e) => {
@@ -65,10 +69,10 @@ if ($.isNode()) {
   $.done()
 })
 
-function znsHelp() {
+function tyHelp() {
   return new Promise(async resolve => {
     let opts = {
-      url : 'https://api.m.jd.com',
+      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${tyShareCodesArr[0]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
       headers : {
         'Origin': 'https://wbbny.m.jd.com',
         'Referer': 'https://wbbny.m.jd.com/',
@@ -76,21 +80,20 @@ function znsHelp() {
         'Cookie': cookie,
         // 'content-type': 'application/x-www-form-urlencoded'
       },
-      form : {
-        appid : 'signed_wh5',
-        client : 'wh5',
-        clientVersion : -1,
-        functionId : 'promote_collectScore',
-        body : {
-          inviteId : `${znsShareId}`,
-          actionType : 0,
-          random,
-          log
-        }
-      }
+      // form : {
+      //   appid : 'signed_wh5',
+      //   client : 'wh5',
+      //   clientVersion : -1,
+      //   functionId : 'promote_collectScore',
+      //   body : {
+      //     inviteId : `${znsShareId}`,
+      //     actionType : 0,
+      //     random,
+      //     log
+      //   }
+      // }
     }
-    console.log(JSON.stringify(opts))
-    $.post(opts, (err, resp, data) => {
+    $.get(opts, (err, resp, data) => {
       try {
         if (err) {           
           console.log(`${err}`)           
@@ -98,21 +101,20 @@ function znsHelp() {
         } else {
           data = JSON.parse(data)
           // console.log(data)
-          if(data['data']) {
-            if(data['data'].bizCode === 0) {
+          if(data?.code==0) {
               console.log('助力成功')
-            } else if(data['data'].bizCode > 0) {
+          } else if (data.code == 104) {
               console.log('今天已经帮助过TA啦~')
-            } else if(data['data'].bizCode < 0){
-              console.log(`好友人气爆棚不需要助力啦~`)
-            }
+          } else if (data.msg == '好友红包已被领光了') {
+              console.log(`助力已满，退出`)
+          } else {
+            console.log(data)
           }
-          console.log(data)
         }
       } catch(e) {
         $.logErr(e, resp)
       } finally {
-        resolve()
+        resolve(data)
       }
     })
   })
@@ -160,7 +162,7 @@ function shareCodesFormat() {
     }
     return true
   } else {
-    console.log(`\n请填写变量：export tyShareCodes="助力码1&助力码2..."`)
+    // console.log(`\n请填写变量：export tyShareCodes="助力码1&助力码2..."`)
     return
   }
 }
