@@ -58,6 +58,7 @@ if ($.isNode()) {
         let res = await tyHelp(i)
         if (res.msg == '好友红包已被领光了') {
           tyShareCodesArr.splice(i, 1)
+          i--
           if (tyShareCodesArr.length == 0) {
             console.log(`\n已全部助力完成，退出！`)
             return
