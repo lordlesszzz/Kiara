@@ -216,7 +216,7 @@ async function getHelpInfoForCk(cookieIndex, cookie) {
             "sceneid": "JLHBhPageh5"
         });
     })
-    console.log(data)
+    // console.log(data)
     switch (data?.data?.result?.status) {
         case 1://火爆
             console.debug(`h5launch 被风控，变成黑号了, data=${JSON.stringify(data)}`)

@@ -5,7 +5,7 @@
 export PZ="助力码"
 */
 
-const $ = new Env('双11膨胀内部互助');
+const $ = new Env('双11膨胀助力');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '', message;
 let secretp='',inviteId=[]
