@@ -118,7 +118,7 @@ function tyHelp(i) {
           } else if (data.code == 104) {
               console.log('今天已经帮助过TA啦~')
           } else if (data.msg == '好友红包已被领光了') {
-              console.log(`助力已满，跳出!`)
+              console.log(`助力已满，跳出!\n`)
           } else {
             console.log(`❌${data.msg}`)
           }
