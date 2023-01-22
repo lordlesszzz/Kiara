@@ -1,18 +1,18 @@
 /*
 团圆红包助力
 update：2023-01-18
-cron 33 0 * * * jd_tyhb_help.js
+cron 33 0 * * * jd_activity_help.js
 */
 
-const $ = new Env('团圆红包助力')
-// const notify = $.isNode() ? require('./sendNotify') : ''
+const $ = new Env('京东活动通用助力')
+const notify = $.isNode() ? require('./sendNotify') : ''
 //Node.js用户请在jdCookie.js处填写京东ck
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : ''
+const jdCookieNode = $.isNode() ? require('../JD/jdCookie.js') : ''
 CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = ''
-let tyShareCodes = process.env.tyShareCodes ? process.env.tyShareCodes : ''
-let tyShareCodesArr = []
+let activityShareCodes = process.env.jd_activity_codes ? process.env.activityShareCodes : ''
+let activityShareCodesArr = []
 
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => { cookiesArr.push(jdCookieNode[item]) })
@@ -26,8 +26,8 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  if (!tyshareCodesFormat()) {
-    console.log(`请填写变量tyShareCodes\n格式为：export tyShareCodes="助力码1&助力码2..."`)
+  if (!activityShareCodesFormat()) {
+    console.log(`请填写变量jd_activity_codes\n格式为：export jd_activity_codes="助力码1&助力码2..."`)
     return
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -42,25 +42,25 @@ if ($.isNode()) {
       try {
 				UA = helpinfo[$.UserName].ua;
 			} catch (e) {
-				UA = require('./USER_AGENTS').UARAM();
+				UA = require('../JD/USER_AGENTS').UARAM();
 			}
       await TotalBean();
-      await tyGetInfo()
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-        // if ($.isNode()) {
-        //   await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        // }
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
         continue
       }
-      for(let i = 0; i < tyShareCodesArr.length; i++) {
-        console.log(`开始助力 ➡️ ${tyShareCodesArr[i]}`)
-        let res = await tyHelp(i)
+      for(let i = 0; i < activityShareCodesArr.length; i++) {
+        console.log(`开始助力 ➡️ ${activityShareCodesArr[i]}`)
+        let res = await activityHelp(i)
+        // console.log(res)
         if (res.msg == '好友红包已被领光了') {
-          tyShareCodesArr.splice(i, 1)
+          activityShareCodesArr.splice(i, 1)
           i--
-          if (tyShareCodesArr.length == 0) {
+          if (activityShareCodesArr.length == 0) {
             console.log(`\n已全部助力完成，退出！`)
             return
           } 
@@ -82,10 +82,10 @@ if ($.isNode()) {
   $.done()
 })
 
-function tyHelp(i) {
+function activityHelp(i) {
   return new Promise(async resolve => {
     let opts = {
-      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${tyShareCodesArr[i]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
+      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${activityShareCodesArr[i]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
       headers : {
         'Origin': 'https://wbbny.m.jd.com',
         'Referer': 'https://wbbny.m.jd.com/',
@@ -93,36 +93,24 @@ function tyHelp(i) {
         'Cookie': cookie,
         // 'content-type': 'application/x-www-form-urlencoded'
       },
-      // form : {
-      //   appid : 'signed_wh5',
-      //   client : 'wh5',
-      //   clientVersion : -1,
-      //   functionId : 'promote_collectScore',
-      //   body : {
-      //     inviteId : `${znsShareId}`,
-      //     actionType : 0,
-      //     random,
-      //     log
-      //   }
-      // }
     }
     $.get(opts, (err, resp, data) => {
       try {
         if (err) {           
           console.log(`${err}`)           
-          console.log(`${$.name} 京东API请求失败，请检查网路重试`)         
+          console.log(`${$.name} API请求失败，请检查网路重试`)         
         } else {
           data = JSON.parse(data)
-          // console.log(data)
-          if(data?.code==0) {
-              console.log('✅助力成功')
-          } else if (data.code == 104) {
-              console.log('今天已经帮助过TA啦~')
-          } else if (data.msg == '好友红包已被领光了') {
-              console.log(`助力已满，跳出!\n`)
-          } else {
-            console.log(`❌${data.msg}`)
-          }
+          console.log(data)
+          // if(data?.code==0) {
+          //     console.log('✅助力成功')
+          // } else if (data.code == 104) {
+          //     console.log('今天已经帮助过TA啦~')
+          // } else if (data.msg == '好友红包已被领光了') {
+          //     console.log(`助力已满，跳出!\n`)
+          // } else {
+          //   console.log(`❌${data.msg}`)
+          // }
         }
       } catch(e) {
         $.logErr(e, resp)
@@ -133,86 +121,49 @@ function tyHelp(i) {
   })
 }
 
-function tyGetInfo() {
-  return new Promise(resolve => {
-    let opts = {
-      url : 'https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body=%7B%22activeId%22%3A%2263bfbb5552b9e4602f8dd1e0%22%7D&appid=cs_h5&client=cs_h5&functionId=festivalhb_home&clientVersion=1.0&h5st=20230118232729875%3B9725441110082369%3B38c56%3Btk02wd8f61da418nindnnwK4cXT6rGoYnQVJpoR0rTnB6yBK2id51fbZFrmov8lD2gwoyHzP7xHb7l9wVOxxQQtpso3p%3B1b74a08aa429a13a4ca9c0fb1d5a5c05c0e99688123fbeb2f1cd2c2e2fff08b6%3B3.1%3B1674055649875%3B62f4d401ae05799f14989d31956d3c5f941dddebf9b194242c6e5165a9bb51db55596540c54f819b05e882cd4a5bed9a21d00138579c07c12c5fe77f78e2ede1b567149a7dc0831f9ece954540bb8015be1da16790d05e360284694dd0dcc76938214620863e8b1a9f30da76ba9795aef341c2e9763f83b882430561fc76c1c0e7da460cd0ee2bdb2eb768350bfaeb34591166fcaac1c43af026649ef668f5fd&loginType=2&sceneval=2',
-      headers : {
-        'Origin': 'https://wbbny.m.jd.com',
-        'Referer': 'https://wbbny.m.jd.com/',
-        'User-Agent': UA,
-        'Cookie': cookie,
-        // 'content-type': 'application/x-www-form-urlencoded'
-      }
-    }
-    $.get(opts, (err, resp, data) => {
-      try {
-        if (err) {           
-          console.log(`${err}`)           
-          console.log(`${$.name} 京东API请求失败，请检查网路重试`)         
-        } else {
-          data = JSON.parse(data)
-          // console.log(data)
-          if(data?.data?.helpTask) {
-            console.log(`助力码：\nshareId=${data?.data.clientConf.shareId}\nitemId=${data?.data.helpTask.itemId}`)
-          } else {
-            console.log(`❌${data?.msg}`)
-          }
-        }
-      } catch(e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data)
-      }
-    })
-  })
-}
-
-function getLog() {
-  return new Promise(resolve => {
-    let opts = {     
-      url : 'https://jinli.shoujiyanxishe.tk/api/jlhb',     
-      json : {       
-        pin : cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]     
-      }   
-    }   
-    $.post(opts, (err, resp, data) => 
-    {     
-      try {      
-        if (err) {
-          console.log(`${$.toStr(err)}`)
-          console.log(`${$.name} 连接服务器 API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data)
-          // console.log(data)
-          random = data.randomNum
-          log = data.log
-        }
-
-      } catch(e) {      
-        $.logErr(e)
-      } finally {       
-        resolve()     
-      }   
-    })
-  })
-}
-
-function tyshareCodesFormat() {
-  if (tyShareCodes) {
-    if (tyShareCodes.indexOf('&') === -1) {
-      tyShareCodesArr.push(tyShareCodes)
+function activityShareCodesFormat() {
+  if (activityShareCodes) {
+    if (activityShareCodes.indexOf('&') === -1) {
+      activityShareCodesArr.push(activityShareCodes)
     } else {
-      tyShareCodes.split('&').forEach(item => {
-        tyShareCodesArr.push(item)
+      activityShareCodes.split('&').forEach(item => {
+        activityShareCodesArr.push(item)
       })
       // return true
     }
     return true
   } else {
-    // console.log(`\n请填写变量：export tyShareCodes="助力码1&助力码2..."`)
+    // console.log(`\n请填写变量：export jd_activity_codes="助力码1&助力码2..."`)
     return
   }
+}
+
+function getNolanSign(body = {}, fd = 'functionId') {
+  return new Promise(async resolve => {
+    let opts = {
+      url : 'https://api.nolanstore.top/sign',
+      json : {
+        body : body,
+        fn : fd,
+        
+      }
+    }
+    $.post(opts, (err, resp, data) => {
+      try {
+        if (err) {           
+          console.log(`${err}`)           
+          console.log(`${$.name} API请求失败，请检查网路重试`)         
+        } else {
+          data = JSON.parse(data)
+          console.log(data)
+        }
+      } catch(e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve()
+      }
+    })
+  })
 }
 
 function taskUrl(fn, body) {
