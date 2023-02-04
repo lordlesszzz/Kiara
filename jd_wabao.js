@@ -42,7 +42,7 @@ $.errMsgPin = []
     let whitelist = '' // 白名单 用&隔开 pin值(填中文
     let blacklist = '' // 黑名单 用&隔开 pin值(填中文
     $.sendNotifyStatus = true // 发送消息 true 为发送 false 不发送 默认 true
-    $.maxHelpNumber = 111 // 最大助力次数
+    $.maxHelpNumber = 30 // 最大助力次数
     $.maxHelpErrCount = 5 // 连续"活动太火爆了，请稍后重试"次数超过此值则停止助力
 
     if (!cookiesArr[0]) {
