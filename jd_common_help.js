@@ -42,7 +42,7 @@ if ($.isNode()) {
       try {
 				UA = helpinfo[$.UserName].ua;
 			} catch (e) {
-				UA = require('../JD/USER_AGENTS').UARAM();
+				UA = require('./USER_AGENTS').UARAM();
 			}
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
