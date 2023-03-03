@@ -11,7 +11,7 @@ const jdCookieNode = $.isNode() ? require('../JD/jdCookie.js') : ''
 CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = ''
-let activityShareCodes = process.env.jd_activity_codes ? process.env.activityShareCodes : ''
+let activityShareCodes = process.env.jd_activityCodes ? process.env.jd_activityCodes : ''
 let activityShareCodesArr = []
 
 if ($.isNode()) {
@@ -27,7 +27,7 @@ if ($.isNode()) {
     return;
   }
   if (!activityShareCodesFormat()) {
-    console.log(`请填写变量jd_activity_codes\n格式为：export jd_activity_codes="助力码1&助力码2..."`)
+    console.log(`请填写变量jd_activityCodes\n格式为：export jd_activityCodes="助力码1&助力码2..."`)
     return
   }
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -57,22 +57,22 @@ if ($.isNode()) {
         console.log(`开始助力 ➡️ ${activityShareCodesArr[i]}`)
         let res = await activityHelp(i)
         // console.log(res)
-        if (res.msg == '好友红包已被领光了') {
-          activityShareCodesArr.splice(i, 1)
-          i--
-          if (activityShareCodesArr.length == 0) {
-            console.log(`\n已全部助力完成，退出！`)
-            return
-          } 
-          continue
-        } else if (res.code == -130) {
-          // console.log(`活动太火爆了，快去买买买吧~`)
-          break
-        } else if (res.code == 0) {
-          break
-        } else if (res.msg== '今日领好友红包个数已达上限') {
-          break
-        }      
+        // if (res.msg == '好友红包已被领光了') {
+        //   activityShareCodesArr.splice(i, 1)
+        //   i--
+        //   if (activityShareCodesArr.length == 0) {
+        //     console.log(`\n已全部助力完成，退出！`)
+        //     return
+        //   } 
+        //   continue
+        // } else if (res.code == -130) {
+        //   // console.log(`活动太火爆了，快去买买买吧~`)
+        //   break
+        // } else if (res.code == 0) {
+        //   break
+        // } else if (res.msg== '今日领好友红包个数已达上限') {
+        //   break
+        // }      
       }
     }
   }
@@ -85,7 +85,7 @@ if ($.isNode()) {
 function activityHelp(i) {
   return new Promise(async resolve => {
     let opts = {
-      url : `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=ms2362fc9e&body={"activeId":"63bfbb5552b9e4602f8dd1e0","shareId":"111_84_97_111_119_43_66_101_120_117_65_119_115_119_65_89_120_120_109_100_54_81_61_61","itemId":"${activityShareCodesArr[i]}"}&appid=cs_h5&client=cs_h5&functionId=festivalhb_help&clientVersion=1.0&loginType=2&sceneval=2`,
+      url : `https://api.m.jd.com/?functionId=inviteFissionHome&body={"linkId":"0l57_ZyiJ8Ak6cbk48fpHQ","inviter":"${activityShareCodesArr[i]}"}&t=1677822643191&appid=activities_platform&client=android&clientVersion=11.4.4&cthr=1&uuid=4666263313234343-5663665393261353&build=98651&screen=393*851&networkType=UNKNOWN&d_brand=xiaomi&d_model=Redmi Note 7 Pro&lang=zh_CN&osVersion=10&partner=xiaomi001&eid=eidA21e4812300s8hytkKp99RgettUrHpSoJRYcrZa673vfW4Jb7UZu5bE/6QIbIJwxqAFE3wUhWHyQxsMN4UjqvjIJionx7ZRwMEb1JX2S9lfCCQfAw&eufv=1&eu=4666263313234343&fv=5663665393261353`,
       headers : {
         'Origin': 'https://wbbny.m.jd.com',
         'Referer': 'https://wbbny.m.jd.com/',
@@ -133,7 +133,7 @@ function activityShareCodesFormat() {
     }
     return true
   } else {
-    // console.log(`\n请填写变量：export jd_activity_codes="助力码1&助力码2..."`)
+    // console.log(`\n请填写变量：export jd_activityCodes="助力码1&助力码2..."`)
     return
   }
 }
