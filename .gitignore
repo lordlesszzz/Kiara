@@ -8,7 +8,6 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock
 package-lock.json
-package.json
 pnpm-lock.yaml
 test/unit/coverage
 test/e2e/reports

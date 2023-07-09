@@ -11,7 +11,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = ['pt_key=AAJkfEgYADAOIFyP2meDS6amRVc8V83PoxJQUl6G9dwH1McWRnM1cb6VKgu25sxxdprBrqvsW40; pt_pin=jd_7ec3d2c22462b;'], cookie = '';
+let cookiesArr = [], cookie = '';
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => { cookiesArr.push(jdCookieNode[item]) })
     if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
