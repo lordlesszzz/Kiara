@@ -1,7 +1,9 @@
 /*
+发财挖宝
+
 
 */
-const $ = new Env("疯狂的矿工⚒️")
+const $ = new Env("发财挖宝-助力")
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : ''
 const notify = $.isNode() ? require('./sendNotify') : ''

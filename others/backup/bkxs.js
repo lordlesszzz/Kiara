@@ -19,7 +19,7 @@ status = (status = ($.getval("bkxsstatus") || "1")) > 1 ? `${status}` : ""; // è
 let bkxshdArr = [], bkxscount = ''
 const notify = $.isNode() ? require('./sendNotify') : '';
 let bkxshd = $.isNode() ? (process.env.bkxshd ? process.env.bkxshd : "") : ($.getdata('bkxshd') ? $.getdata('bkxshd') : "")
-let withdraws = $.isNode() ? (process.env.withdraws ? process.env.withdraws : "100") : ($.getdata('withdraws') ? $.getdata('withdraws') : "")
+let withdraws = $.isNode() ? (process.env.withdraws ? process.env.withdraws : "6") : ($.getdata('withdraws') ? $.getdata('withdraws') : "")
 let allMessage = '';
 let bkxshds = ""
 const logs = 0;
