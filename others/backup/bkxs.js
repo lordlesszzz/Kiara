@@ -13,7 +13,7 @@ cron 0 1,10 * * * bkxs.js
 */
 
 const $ = new Env('必看小说');
-var crypto = require("crypto");
+var crypto = require("crypto")
 let status;
 status = (status = ($.getval("bkxsstatus") || "1")) > 1 ? `${status}` : ""; // 账号扩展字符
 let bkxshdArr = [], bkxscount = ''
