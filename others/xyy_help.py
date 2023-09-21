@@ -24,7 +24,7 @@ print(response)
 if accounts is None:
     print('你没有填入cookie，咋运行？')
     exit()
-accounts_list = accounts.split('====')
+accounts_list = accounts.split('&')
 num_of_accounts = len(accounts_list)
 print(f"获取到 {num_of_accounts} 个账号")
 for i, account in enumerate(accounts_list, start=1):
