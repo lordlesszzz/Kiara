@@ -148,7 +148,7 @@ def yd(q):
 
 if __name__ == '__main__':
     yyhzck = os.getenv('yyhzck')
-    yyhzck = yyhzck.split('&')
+    yyhzck = yyhzck.split('====')
     q = Queue()
     threads = []
     for num, c in enumerate(yyhzck):

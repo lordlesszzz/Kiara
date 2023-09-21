@@ -18,11 +18,11 @@ import requests
 # from dotenv import load_dotenv
 #
 # load_dotenv()
-accounts = os.getenv("Acookie")
+accounts = os.getenv("yyhzck")
 response = requests.get('https://gitee.com/shallow-a/qim9898/raw/master/label.txt').text
 print(response)
 if accounts is None:
-    print('你没有填入Acookie，咋运行？')
+    print('你没有填入cookie，咋运行？')
     exit()
 accounts_list = accounts.split('====')
 num_of_accounts = len(accounts_list)
