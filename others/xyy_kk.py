@@ -61,14 +61,14 @@ class YYHZ:
         debugger(f'userinfo {res}')
         data = res.get('data')
         if not data:
-            printlog(f'账号{self.index} ck失效，请重新获取ck')
-            self.msg += f'账号{self.index} ck失效，请重新获取ck\n'
+            printlog(f'\n【账号】{self.index} ck失效，请重新获取ck')
+            self.msg += f'\n【账号】{self.index} ck失效，请重新获取ck\n'
             return False
         self.nickname = data.get('nickname')
         balance = data.get('balance')
         recommendCode = data.get('recommendCode')
-        printlog(f"账号：{self.nickname}，现有豆豆{balance}，邀请码：{recommendCode}")
-        self.msg += f"账号：{self.nickname}，现有豆豆{balance}，邀请码：{recommendCode}\n"
+        printlog(f"\n【账号】：{self.nickname}，现有豆豆{balance}，邀请码：{recommendCode}")
+        self.msg += f"\n【账号】：{self.nickname}，现有豆豆{balance}，邀请码：{recommendCode}\n"
         return True
 
     def read(self):
