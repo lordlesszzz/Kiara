@@ -2,6 +2,7 @@
 # 悦悦互助
 # Author: kk
 # date：2023/9/20 13:27
+
 # new Env('小阅阅kk')
 # cron: 0 0,5-22/2 * * *
 """
@@ -148,7 +149,7 @@ def yd(q):
 
 if __name__ == '__main__':
     yyhzck = os.getenv('yyhzck')
-    yyhzck = yyhzck.split('&')
+    yyhzck = yyhzck.split('@')
     q = Queue()
     threads = []
     for num, c in enumerate(yyhzck):
