@@ -134,8 +134,8 @@ class YYHZ:
         if not self.userinfo():
             return False
         self.read()
-        if self.withdrawinfo():
-            self.withdraw()
+        # if self.withdrawinfo():
+        #     self.withdraw()
         if not printf:
             print(self.msg.strip())
 
