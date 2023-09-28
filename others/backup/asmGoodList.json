@@ -1,0 +1,1009 @@
+[
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10544016",
+      "origin": 1,
+      "goodsType": 2,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "开心刮刮卡",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "开心刮刮卡",
+      "unit": "",
+      "salesVolume": 1676,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nyo5cxyvxy0c/nyo5cxyvxy0c-%E5%BC%80%E5%BF%83%E5%88%AE%E5%88%AE%E5%8D%A1613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695545109000",
+      "updateTime": "1695545109000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10544016",
+          "skuId": "10539047",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "开心刮刮卡",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695545110000",
+          "updateTime": "1695545110000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":1000000,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne9xa30s5ajy/ne9xa30s5ajy-%E8%AF%A6%E6%83%85%E9%A1%B5%E5%9B%BE.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne9xa30s5ajy/ne9xa30s5ajy-%E8%AF%A6%E6%83%85%E9%A1%B5%E5%9B%BE.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10544016",
+              "skuId": "10539047",
+              "price": "100",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10544016",
+            "skuId": "10539047",
+            "firstUpTime": "1695571222",
+            "lastUpTime": "1695571222",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10544016",
+            "originSkuId": "10539047",
+            "updateTime": "1695571222",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": null,
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "开心刮刮卡",
+          "UMA_PRIZE_MODEL_TYPE": "card",
+          "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"sendDescType\":\"0\",\"imageType\":\"1\"}",
+          "PRIZE_ID": "414662885",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "1000000",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "开心刮刮卡",
+        "UMA_PRIZE_MODEL_TYPE": "card",
+        "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"sendDescType\":\"0\",\"imageType\":\"1\"}",
+        "freight": "{\"type\":1,\"value\":0}",
+        "PRIZE_ID": "414662885",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "1000000"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne9xa30s5ajy/ne9xa30s5ajy-%E8%AF%A6%E6%83%85%E9%A1%B5%E5%9B%BE.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne9xa30s5ajy/ne9xa30s5ajy-%E8%AF%A6%E6%83%85%E9%A1%B5%E5%9B%BE.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 1000000,
+    "purchasedCount": 1788,
+    "remainCount": 998212
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10544015",
+      "origin": 1,
+      "goodsType": 2,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "快乐星球10积分",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "快乐星球10积分",
+      "unit": "",
+      "salesVolume": 99658,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nypadh47p3nl/nypadh47p3nl-%E5%BF%AB%E4%B9%90%E6%98%9F%E7%90%83%E7%A7%AF%E5%88%86613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695544542000",
+      "updateTime": "1695544542000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10544015",
+          "skuId": "10539046",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "快乐星球10积分",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695544542000",
+          "updateTime": "1695544542000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":100000,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ofe6csxnm6oa/ofe6csxnm6oa-10%E7%A7%AF%E5%88%86.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ofe6csxnm6oa/ofe6csxnm6oa-10%E7%A7%AF%E5%88%86.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10544015",
+              "skuId": "10539046",
+              "price": "10",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10544015",
+            "skuId": "10539046",
+            "firstUpTime": "1695571225",
+            "lastUpTime": "1695571225",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10544015",
+            "originSkuId": "10539046",
+            "updateTime": "1695571225",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": null,
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "快乐星球10积分",
+          "UMA_PRIZE_MODEL_TYPE": "thirdAsset",
+          "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"subType\":\"weimodPoint\",\"sendDescType\":\"0\",\"imageType\":\"0\"}",
+          "REACH_UPPER_LIMIT": "1",
+          "PRIZE_ID": "414021972",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "100000",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "快乐星球10积分",
+        "UMA_PRIZE_MODEL_TYPE": "thirdAsset",
+        "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"subType\":\"weimodPoint\",\"sendDescType\":\"0\",\"imageType\":\"0\"}",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "PRIZE_ID": "414021972",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "100000"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ofe6csxnm6oa/ofe6csxnm6oa-10%E7%A7%AF%E5%88%86.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ofe6csxnm6oa/ofe6csxnm6oa-10%E7%A7%AF%E5%88%86.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 100000,
+    "purchasedCount": 100000,
+    "remainCount": 0
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10544014",
+      "origin": 1,
+      "goodsType": 2,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "京东E卡50元",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "京东E卡50元",
+      "unit": "",
+      "salesVolume": 770,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nypambctiwwo/nypambctiwwo-%E4%BA%AC%E4%B8%9CE%E5%8D%A150%E5%85%83613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695543505000",
+      "updateTime": "1695543505000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10544014",
+          "skuId": "10539045",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "京东E卡50元",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695543505000",
+          "updateTime": "1695543505000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":1000,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10544014",
+              "skuId": "10539045",
+              "price": "2000",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10544014",
+            "skuId": "10539045",
+            "firstUpTime": "1695571228",
+            "lastUpTime": "1695571228",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10544014",
+            "originSkuId": "10539045",
+            "updateTime": "1695571228",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": {
+          "items": [
+            { "limitType": "USER_PERIOD", "period": 24, "limitNum": 1 }
+          ],
+          "memberLevelIdList": null
+        },
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "京东E卡50元",
+          "UMA_PRIZE_MODEL_TYPE": "codePack",
+          "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"sendDescType\":\"0\",\"imageType\":\"1\",\"useDesc\":\"\"}",
+          "REACH_UPPER_LIMIT": "1",
+          "PRIZE_ID": "415808339",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "1000",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "京东E卡50元",
+        "UMA_PRIZE_MODEL_TYPE": "codePack",
+        "UMA_PRIZE_EXTRA_INFO": "{\"useDescType\":\"0\",\"sendDescType\":\"0\",\"imageType\":\"1\",\"useDesc\":\"\"}",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "PRIZE_ID": "415808339",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "1000",
+        "purchaseLimit": "{\"items\":[{\"limitNum\":1,\"limitType\":\"USER_PERIOD\",\"period\":24}]}"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 1000,
+    "purchasedCount": 1000,
+    "remainCount": 0
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10543951",
+      "origin": 1,
+      "goodsType": 2,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "京东E卡10元",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "京东E卡10元",
+      "unit": "",
+      "salesVolume": 1572,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nypadhy2ao2p/nypadhy2ao2p-%E4%BA%AC%E4%B8%9CE%E5%8D%A110%E5%85%83613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695527792000",
+      "updateTime": "1695528858000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10543951",
+          "skuId": "10538979",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "京东E卡10元",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695527793000",
+          "updateTime": "1695527793000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":2000,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10543951",
+              "skuId": "10538979",
+              "price": "900",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10543951",
+            "skuId": "10538979",
+            "firstUpTime": "1695571232",
+            "lastUpTime": "1695571232",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10543951",
+            "originSkuId": "10538979",
+            "updateTime": "1695571232",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": {
+          "items": [
+            { "limitType": "USER_PERIOD", "period": 24, "limitNum": 1 }
+          ],
+          "memberLevelIdList": null
+        },
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "京东E卡10元",
+          "REACH_UPPER_LIMIT": "1",
+          "PRIZE_ID": "415809899",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "2000",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "京东E卡10元",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "PRIZE_ID": "415809899",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "2000",
+        "purchaseLimit": "{\"items\":[{\"limitNum\":1,\"limitType\":\"USER_PERIOD\",\"period\":24}]}"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neup0akrv9hp/neup0akrv9hp-Beats%20Studio%203%20Wireless%E5%A4%B4%E6%88%B4%E5%BC%8F%E8%80%B3%E6%9C%BA%202.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 2000,
+    "purchasedCount": 2000,
+    "remainCount": 0
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10538978",
+      "origin": 1,
+      "goodsType": 1,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "SMILEY 帆布袋",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "SMILEY 帆布袋",
+      "unit": "",
+      "salesVolume": 191,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nyo38jbay51l/nyo38jbay51l-smiley%E5%B8%86%E5%B8%83%E8%A2%8B613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695526820000",
+      "updateTime": "1695526820000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10538978",
+          "skuId": "10543950",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "SMILEY 帆布袋",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695526820000",
+          "updateTime": "1695526820000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":200,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew7829qay/neuew7829qay-Group%201000002053.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew7829qay/neuew7829qay-Group%201000002053.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10538978",
+              "skuId": "10543950",
+              "price": "9000",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10538978",
+            "skuId": "10543950",
+            "firstUpTime": "1695571237",
+            "lastUpTime": "1695571237",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10538978",
+            "originSkuId": "10543950",
+            "updateTime": "1695571237",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": {
+          "items": [
+            { "limitType": "USER_PERIOD", "period": 720, "limitNum": 1 }
+          ],
+          "memberLevelIdList": null
+        },
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "SMILEY 帆布袋",
+          "REACH_UPPER_LIMIT": "1",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "200",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "SMILEY 帆布袋",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "200",
+        "purchaseLimit": "{\"items\":[{\"limitNum\":1,\"limitType\":\"USER_PERIOD\",\"period\":720}]}"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew7829qay/neuew7829qay-Group%201000002053.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew7829qay/neuew7829qay-Group%201000002053.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 200,
+    "purchasedCount": 200,
+    "remainCount": 0
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10538977",
+      "origin": 1,
+      "goodsType": 1,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "SMILEY 旅行箱",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "SMILEY 旅行箱",
+      "unit": "",
+      "salesVolume": 75,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nyo38jasoa6e/nyo38jasoa6e-smiley%E6%97%85%E8%A1%8C%E7%AE%B1613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695526459000",
+      "updateTime": "1695526459000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10538977",
+          "skuId": "10543949",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "SMILEY 旅行箱",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695526460000",
+          "updateTime": "1695526460000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":100,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew78jai74/neuew78jai74-Group%201000002052.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew78jai74/neuew78jai74-Group%201000002052.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10538977",
+              "skuId": "10543949",
+              "price": "18000",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10538977",
+            "skuId": "10543949",
+            "firstUpTime": "1695571240",
+            "lastUpTime": "1695571240",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10538977",
+            "originSkuId": "10543949",
+            "updateTime": "1695571240",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": {
+          "items": [
+            { "limitType": "USER_PERIOD", "period": 720, "limitNum": 1 }
+          ],
+          "memberLevelIdList": null
+        },
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "SMILEY 旅行箱",
+          "REACH_UPPER_LIMIT": "1",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "100",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "SMILEY 旅行箱",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "100",
+        "purchaseLimit": "{\"items\":[{\"limitNum\":1,\"limitType\":\"USER_PERIOD\",\"period\":720}]}"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew78jai74/neuew78jai74-Group%201000002052.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/neuew78jai74/neuew78jai74-Group%201000002052.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 100,
+    "purchasedCount": 100,
+    "remainCount": 0
+  },
+  {
+    "spuDTO": {
+      "saasId": "1688472186171140736",
+      "spuId": "10543948",
+      "origin": 1,
+      "goodsType": 1,
+      "goodsChannel": 1,
+      "outerId": "",
+      "barCode": "",
+      "categoryId": "54887",
+      "title": "Beats Studio 3 Wireless 头戴式耳机",
+      "enTitle": "",
+      "subTitle": "",
+      "intro": "Beats Studio 3 Wireless 头戴式耳机",
+      "unit": "",
+      "salesVolume": 10,
+      "brandId": null,
+      "spuDesc": "{\"goodsDetailImages\":[{\"url\":\"https://bizmid-material-online-1302115263.file.myqcloud.com/persist/nyo38i160v9r/nyo38i160v9r-beats%E8%80%B3%E6%9C%BA613.png\"}]}",
+      "listable": true,
+      "available": true,
+      "deleted": false,
+      "createTime": "1695525241000",
+      "updateTime": "1695526858000",
+      "onShelf": true,
+      "shelfStatus": 1,
+      "spuPrice": {
+        "minSalePrice": null,
+        "maxSalePrice": null,
+        "minMarketPrice": null,
+        "maxMarketPrice": null
+      },
+      "skuList": [
+        {
+          "saasId": "1688472186171140736",
+          "spuId": "10543948",
+          "skuId": "10538976",
+          "outerId": "",
+          "barCode": "",
+          "saleChannel": 0,
+          "goodsChannel": 1,
+          "title": "Beats Studio 3 Wireless 头戴式耳机",
+          "enTitle": "",
+          "available": true,
+          "deleted": false,
+          "createTime": "1695525241000",
+          "updateTime": "1695525241000",
+          "onShelf": true,
+          "shelfStatus": 1,
+          "skuExt": {
+            "weight": null,
+            "volume": null,
+            "purchaseLimit": null
+          },
+          "skuExtMap": {
+            "purchaseLimit": "{\"items\":[{\"limitNum\":10,\"limitType\":\"GLOBAL\"}]}"
+          },
+          "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne94hd2t3jlh/ne94hd2t3jlh-Group%201000002054.png",
+          "skuImageList": [
+            {
+              "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne94hd2t3jlh/ne94hd2t3jlh-Group%201000002054.png",
+              "main": null
+            }
+          ],
+          "skuVideoList": [],
+          "skuSpecValueList": [],
+          "skuTagList": [],
+          "priceList": [
+            {
+              "saasId": "1688472186171140736",
+              "spuId": "10543948",
+              "skuId": "10538976",
+              "price": "50000",
+              "priceType": 4,
+              "priceTypeName": "积分价"
+            }
+          ],
+          "spuDTO": null,
+          "skuStatus": {
+            "spuId": "10543948",
+            "skuId": "10538976",
+            "firstUpTime": "1695571245",
+            "lastUpTime": "1695571245",
+            "shelvesType": 0,
+            "shelvesStatus": 1,
+            "goodsChannel": 1,
+            "passType": 1,
+            "stockMode": 1,
+            "priceMode": 1,
+            "originSaasId": "0",
+            "originSpuId": "10543948",
+            "originSkuId": "10538976",
+            "updateTime": "1695571245",
+            "autoOnshelfTime": null,
+            "autoOffshelfTime": null,
+            "assignSaasId": "1688472186171140736"
+          }
+        }
+      ],
+      "spuExt": {
+        "purchaseLimit": {
+          "items": [
+            { "limitType": "USER_PERIOD", "period": 720, "limitNum": 1 }
+          ],
+          "memberLevelIdList": null
+        },
+        "freight": { "type": 1, "value": "0", "templateId": null },
+        "returnExchangeConfig": null,
+        "sharable": null,
+        "weshopGoodsExtField": null,
+        "weshopGoodsAuditStatus": null,
+        "goodsCategory": null,
+        "spuExtMap": {
+          "UMA_PRIZE_DESC": "Beats Studio 3 Wireless 头戴式耳机",
+          "REACH_UPPER_LIMIT": "1",
+          "POINT_GOODS_SPU_PURCHASE_LIMIT": "10",
+          "POINT_GOODS_EXCHANGE_TYPE": "POINT"
+        }
+      },
+      "spuExtMap": {
+        "UMA_PRIZE_DESC": "Beats Studio 3 Wireless 头戴式耳机",
+        "REACH_UPPER_LIMIT": "1",
+        "freight": "{\"type\":1,\"value\":0}",
+        "POINT_GOODS_EXCHANGE_TYPE": "POINT",
+        "POINT_GOODS_SPU_PURCHASE_LIMIT": "10",
+        "purchaseLimit": "{\"items\":[{\"limitNum\":1,\"limitType\":\"USER_PERIOD\",\"period\":720}]}"
+      },
+      "primaryImage": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne94hd2t3jlh/ne94hd2t3jlh-Group%201000002054.png",
+      "spuImageList": [
+        {
+          "imageUrl": "https://bizmid-material-online-1302115263.file.myqcloud.com/persist/ne94hd2t3jlh/ne94hd2t3jlh-Group%201000002054.png",
+          "main": true
+        }
+      ],
+      "spuVideoList": [],
+      "spuSpecList": [],
+      "spuAttrList": [],
+      "spuTagList": [],
+      "spuFrontCategoryList": []
+    },
+    "spuLimitCount": 10,
+    "purchasedCount": 10,
+    "remainCount": 0
+  }
+]
