@@ -209,7 +209,7 @@ async function checkEnv() {
     if (!$.cookie) {
       const getEnv = require('./utils/config')
       let config = await getEnv(configName)
-      cookieArr = config?.token
+      cookieArr = config?.token || cookieArr
     }
   } catch (e) {
     console.log(`读取环境变量...`)
