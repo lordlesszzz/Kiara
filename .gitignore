@@ -2,6 +2,7 @@
 node_modules/
 dist/
 test/
+backup/
 CONTRIBUTING.md
 npm-debug.log
 yarn-debug.log*
