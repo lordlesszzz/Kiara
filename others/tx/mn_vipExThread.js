@@ -11,7 +11,7 @@ const $ = new Env('蒙牛超级会员兑换')
 const CryptoJS = require('crypto-js')
 const { Worker, isMainThread, workerData } = require('worker_threads')
 
-let cookie = ``
+let cookie = `H3oijMaVT0CLtQ7ftn9f0RTHpDz1TgJwEtkJl+4ZZBOU1qAEoMNJMp/voZqjO+Wg9ETahIJ84KK+BJ6kOI1GSbyfuuPKPDJEekCMMhhO8XNZqli4ba8xSnbgSkoo0cq3J/4ceXkuJq2FQvLAYomd+kCP3Y3Ywef1sigqPzegGJ0ecrQX3AgfmNQxtBiSThjZG4f0goCf6vDatd9Yn49LWm/vsifvO3A4yflv8gX/kOeJGM9WCMG4dAQgovdpba+e`
 let cookieArr = [],
   envName = 'mn_superVip',
   configName = 'mn_superVip',

@@ -10,10 +10,11 @@ cron: 0 0 * * *
 const $ = new Env('统一阿萨姆兑换')
 const CryptoJS = require('crypto-js')
 const asmGoodList = require('./asmGoodList.json')
-const { Worker, isMainThread, workerData } = require('worker_threads')
 const sign = new Sign()
 
-let cookie = '8937bf806ffa258b56efce6d3db3618c2c944ad5c9bff39ade3dcf36ba58ace15939efa453d2adf5b987327e458509fb@018087c206b194c5e5f2044f155c8f34029b16953f4ded5178b08e53f0fa499428223aa6006aeeffe09427b726ab9130@7d6311d2b1244911b8355fe4dfa377b030e736f4a1463d7a821d414f36aa2112790b4627e7998c49488d96de0c8c9f82@5c0c62f4650e743d0a6c5d0efbb8a338a4e2ade0a157f555dc97c900a73b37611c91d5171eb3bcc1637fd2175ed7e485@453b94df8dfbcad64579ddd872ee474ee94ec1a84295176fc37526b8baca65fa81afaa15240c061f1416b09140c4408c'
+const prefixFlag = true, timeFlag = true
+
+let cookie = ''
 let cookieArr = [],
   token = '',
   userList = [],
@@ -26,39 +27,42 @@ let cookieArr = [],
 cookie = cookie || process.env[envName]
 
 exchangeList = ['京东E卡50元', '京东E卡10元']
+exchangeList = ['SMILEY 旅行箱', 'SMILEY 帆布袋']
 asmTokenArr = [
-  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216015520e56af1a40419bc1e8e70e061d872ead1bd80110c3558ce7c4c953f0333d183e248c203b901480e71c037fd51a66cc498772ef0cf3745aa2c0d407b35c4',
-  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216297212f345fa01ba43878152ec704e2f72ead1bd80110c3558ce7c4c953f0333899f16fcbffb70d1d53a2f8341e5ded66cc498772ef0cf3709712a4d99ae8b07',
-  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb952168f38bf38a16b45df759f7b18fb94b2ed72ead1bd80110c3558ce7c4c953f033301d0a869953c086d365ec101a5ebb35b6cc498772ef0cf37968ed3b4f651ff61',
-  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216e8ca87bd6dc3ea5a7143a7109d013a2b72ead1bd80110c3558ce7c4c953f0333fcd8da21e3746f59365ec101a5ebb35b6cc498772ef0cf371afaf2c6f7032f1f',
-  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216bf090b59d45e98c437d429a0855d547372ead1bd80110c3558ce7c4c953f03338e896f78ddb3dcfe62090006ef52f9b56cc498772ef0cf3736ccce88ac2f2f6e'
+  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216015520e56af1a40419bc1e8e70e061d872ead1bd80110c355ebb858c3bed1f786f9576f026524959480e71c037fd51a66cc498772ef0cf37f808041ae97a6060',
+  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216297212f345fa01ba43878152ec704e2f72ead1bd80110c355ebb858c3bed1f78fde5c34a657005f3365ec101a5ebb35b6cc498772ef0cf37f9af73b90c0c2d69',
+  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb952168f38bf38a16b45df759f7b18fb94b2ed72ead1bd80110c355ebb858c3bed1f781394da7903214b64d53a2f8341e5ded66cc498772ef0cf376ca88969a5523b0f',
+  '49ea35b6b6edecd76c30a9545e9a71f7dad489ca7cb95216e8ca87bd6dc3ea5a7143a7109d013a2b72ead1bd80110c355ebb858c3bed1f788aa5e492567febde7be0e9abc1d4d2a46cc498772ef0cf3744b6be599ba23141',
 ]
 
 !(async () => {
+  $.init({ prefixFlag, timeFlag })
+  if ($.isMainThread) {
 
-  if (isMainThread) {
-    await checkEnv()
-    if (cookieArr.length == 0) {
-      if (!$.envFormat(envName)) return
-    }
-    // console.log(`\n共${cookieArr.length}个账号`)
     if (asmTokenArr.length == 0) {
+      await checkEnv()
+      if (cookieArr.length == 0) {
+        if (!$.envFormat(envName)) return
+      }
+      console.log(`\n共${cookieArr.length}个账号`)
       $.index = 0
       for (let item of JSON.parse(JSON.stringify(cookieArr))) {
         token = item
         await getUserList()
         $.index++
       }
+    } else {
+      console.log(`\n共${asmTokenArr.length}个账号`)
     }
 
     // console.log('! / asmTokenArr:', asmTokenArr)
     //线程数
-    const threadCount = +process.env.threadCount || cookieArr.length
+    const threadCount = +process.env.threadCount || cookieArr.length || asmTokenArr.length
     const threads = new Set()
     // console.log(`\n共${threadCount}个线程...`)
 
     for (let i = 0; i < threadCount; i++) {
-      threads.add(new Worker(__filename, {
+      threads.add(new $.Worker(__filename, {
         workerData: {
           cookie: cookieArr[i],
           index: i,
@@ -79,11 +83,10 @@ asmTokenArr = [
     }
 
   } else {
-    $.index = workerData.index
-    token = workerData.cookie
-    userList = workerData.userList
-    asmTokenArr = workerData.asmTokenArr
-
+    $.index = $.workerData.index
+    token = $.workerData.cookie
+    userList = $.workerData.userList
+    asmTokenArr = $.workerData.asmTokenArr
     $.goodList = asmGoodList
     if (userList.length != 0) {
       let user = userList[$.index]
@@ -97,18 +100,18 @@ asmTokenArr = [
 
 
     $.logPrefix = `【账号${$.index + 1}】${$.nickName || ''} `
-    $.log(`\n*******${$.logPrefix}******* `)
+    $.log(`\n*******${$.logPrefix}******* `, { prefixless: true, timeless: true })
     await asmExchange()
 
   }
 })().catch(err => {
-  $.log(err)
+  $.logErr(err)
 }).finally(() => {
   // $.done()
 })
 
 async function asmExchange() {
-  $.log(`\n== 消消乐兑换 ==`)
+  // $.log(`\n== 消消乐兑换 ==`)
   $.host = `um.ioutu.cn`
   $.platform = 'web'
   $.signKey = 'DNYj@23#dsfj&*1sjs'
@@ -121,18 +124,18 @@ async function asmExchange() {
         let { title, skuList } = good.spuDTO
         let sku = skuList[0]
         if (title.includes(exchangeGood)) {
-          $.logThread(`\n兑换${sku.title}...`)
+          $.log(`\n兑换${sku.title}...`)
           $.price = sku.priceList[0].price
           for (let i = 0; i < exchangeNum; i++) {
             await goodCommit(sku)
             if ($.exchangeRes.msg.includes('服务器正忙')) {
-              $.logThread(`重试...`)
+              $.log(`重试...`)
               for (let j = 0; j < reTry; j++) {
                 await goodCommit(sku)
                 if ($.exchangeRes.success) break
-                if (j == reTry - 1) $.logThread(`重试最后一次, 跳出!`)
+                if (j == reTry - 1) $.log(`重试最后一次, 跳出!`)
               }
-            } else if($.exchangeRes.msg.includes('全部商品无货')) {
+            } else if ($.exchangeRes.msg.includes('全部商品无货')) {
               break
             }
 
@@ -159,7 +162,7 @@ async function asmExchange() {
     if (res.success) {
       $.goodList = res.data?.dataList
     } else {
-      $.logThread(`${res.msg}`)
+      $.log(`${res.msg}`)
     }
   }
 
@@ -197,7 +200,7 @@ async function asmExchange() {
       }
       await goodOrder(good)
     } else {
-      $.logThread(`${res.msg}`)
+      $.log(`${res.msg}`)
     }
   }
 
@@ -231,9 +234,9 @@ async function asmExchange() {
     })
     res = $.toObj(res)
     if (res.success) {
-      $.logThread(`兑换成功`)
+      $.log(`兑换成功`)
     } else {
-      $.logThread(`${res.msg}`)
+      $.log(`${res.msg}`)
     }
   }
 
@@ -672,4 +675,436 @@ function Sign() {
 
 
 // prettier-ignore
-function Env(t, e) { return new class { constructor(t, e) { this.name = t, this.nickName = "", this.data = null, this.index = "", this.cookie = "", this.cookieArr = [], this.splitor = "@", this.envSplitor = ["@", "\n"], this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.logPrefix = `【账号${this.index}】${this.nickName || ""}`, this.encoding = "utf-8", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`) } toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } } toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } } loaddata() { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e); if (!s && !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } } } writedata() { if (this.isNode()) { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e), o = JSON.stringify(this.data); s ? this.fs.writeFileSync(t, o) : i ? this.fs.writeFileSync(e, o) : this.fs.writeFileSync(t, o) } } initGotEnv(t) { this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar)) } get(t, e = (() => { })) { t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"], delete t.headers["content-type"], delete t.headers["content-length"]); let s = require("iconv-lite"); this.initGotEnv(t), this.got(t).on("redirect", ((t, e) => { try { if (t.headers["set-cookie"]) { const s = t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString(); s && this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar } } catch (t) { this.logErr(t) } })).then((t => { const { statusCode: i, statusCode: o, headers: h, rawBody: r } = t, n = s.decode(r, this.encoding); e(null, { status: i, statusCode: o, headers: h, rawBody: r, body: n }, n) }), (t => { const { message: i, response: o } = t; e(i, o, o && s.decode(o.rawBody, this.encoding)) })) } post(t, e = (() => { })) { const s = t.method ? t.method.toLocaleLowerCase() : "post"; t.body && t.headers && !t.headers["Content-Type"] && !t.headers["content-type"] && (t.headers["content-type"] = "application/x-www-form-urlencoded"), t.headers && (delete t.headers["Content-Length"], delete t.headers["content-length"]); let i = require("iconv-lite"); this.initGotEnv(t); const { url: o, ...h } = t; this.got[s](o, h).then((t => { const { statusCode: s, statusCode: o, headers: h, rawBody: r } = t, n = i.decode(r, this.encoding); e(null, { status: s, statusCode: o, headers: h, rawBody: r, body: n }, n) }), (t => { const { message: s, response: o } = t; e(s, o, o && i.decode(o.rawBody, this.encoding)) })) } http(t = {}) { let { method: e = "get", url: s, headers: i, body: o } = t, h = { url: s, headers: i }; return "post" === e && (h.body = o), new Promise((async t => { this[e](h, (async (e, s, i) => { try { e && (console.log(`${JSON.stringify(e)}`), console.log(`${this.name} API请求失败，请检查网路重试`)) } catch (t) { $.logThreadErr(t) } finally { t(i) } })) })) } envFormat(t) { if (this.cookie) { for (let t of this.envSplitor) if (this.cookie.indexOf(t) > -1) { this.splitor = t; break } return this.cookie.split(this.splitor).forEach((t => this.cookieArr.push(t))), !0 } console.log(`\n未填写变量${t}`) } time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { "M+": s.getMonth() + 1, "d+": s.getDate(), "H+": s.getHours(), "m+": s.getMinutes(), "s+": s.getSeconds(), "q+": Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) && (t = t.replace(RegExp.$1, (s.getFullYear() + "").substr(4 - RegExp.$1.length))); for (let e in i) new RegExp("(" + e + ")").test(t) && (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : ("00" + i[e]).substr(("" + i[e]).length))); return t } queryStr(t) { let e = ""; for (const s in t) { let i = t[s]; null != i && "" !== i && ("object" == typeof i && (i = JSON.stringify(i)), e += `${s}=${i}&`) } return e = e.substring(0, e.length - 1), e } log(...t) { t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logThread(...t) { (t = t.map((t => t ? t.startsWith("\n") ? `\n${this.logPrefix}${t.substring(1)}` : `${this.logPrefix}${t}` : t))).length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logErr(t, e) { this.log("", `❗️${this.name}, 错误!`, t.stack) } wait(t) { return new Promise((e => setTimeout(e, t))) } done(t = {}) { const e = ((new Date).getTime() - this.startTime) / 1e3; this.log("", `🔔${this.name}, 结束! 🕛 ${e} 秒`), this.log(), process.exit(1) } start() { this.log(`${this.name}, 开始!`) } end(t = {}) { const e = ((new Date).getTime() - this.startTime) / 1e3; this.log("", `${this.name}, 结束! 🕛 ${e} 秒`) } }(t, e) }
+function Env(name, opts) {
+  return new (class {
+    constructor(name, opts) {
+      this.name = name
+      this.logSeparator = '\n'
+      this.encoding = 'utf-8'
+      this.startTime = new Date().getTime()
+      this.init()
+      Object.assign(this, opts)
+      this.log(`\n[${this.name}], 开始!`, { time: true, console: this.isMainThread })
+    }
+    toObj(str, defaultValue = str) {
+      try {
+        return JSON.parse(str)
+      } catch {
+        return defaultValue
+      }
+    }
+    toStr(obj, defaultValue = obj) {
+      try {
+        return JSON.stringify(obj)
+      } catch {
+        return defaultValue
+      }
+    }
+    initGotEnv(opts) {
+      this.got = this.got ? this.got : require('got')
+      this.cktough = this.cktough ? this.cktough : require('tough-cookie')
+      this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar()
+      if (opts) {
+        opts.headers = opts.headers ? opts.headers : {}
+        if (undefined === opts.headers.Cookie && undefined === opts.cookieJar) {
+          opts.cookieJar = this.ckjar
+        }
+      }
+    }
+    get(request, callback = () => { }) {
+      if (request.headers) {
+        delete request.headers['Content-Type']
+        delete request.headers['Content-Length']
+
+        // HTTP/2 全是小写
+        delete request.headers['content-type']
+        delete request.headers['content-length']
+      }
+
+      let iconv = require('iconv-lite')
+      this.initGotEnv(request)
+      this.got(request)
+        .on('redirect', (resp, nextOpts) => {
+          try {
+            if (resp.headers['set-cookie']) {
+              const ck = resp.headers['set-cookie']
+                .map(this.cktough.Cookie.parse)
+                .toString()
+              if (ck) {
+                this.ckjar.setCookieSync(ck, null)
+              }
+              nextOpts.cookieJar = this.ckjar
+            }
+          } catch (e) {
+            this.logErr(e)
+          }
+          // this.ckjar.setCookieSync(resp.headers['set-cookie'].map(Cookie.parse).toString())
+        })
+        .then(
+          (resp) => {
+            const {
+              statusCode: status,
+              statusCode,
+              headers,
+              rawBody
+            } = resp
+            const body = iconv.decode(rawBody, this.encoding)
+            callback(
+              null,
+              { status, statusCode, headers, rawBody, body },
+              body
+            )
+          },
+          (err) => {
+            const { message: error, response: resp } = err
+            callback(
+              error,
+              resp,
+              resp && iconv.decode(resp.rawBody, this.encoding)
+            )
+          }
+        )
+    }
+    post(request, callback = () => { }) {
+      const method = request.method
+        ? request.method.toLocaleLowerCase()
+        : 'post'
+
+      // 如果指定了请求体, 但没指定 `Content-Type`、`content-type`, 则自动生成。
+      if (
+        request.body &&
+        request.headers &&
+        !request.headers['Content-Type'] &&
+        !request.headers['content-type']
+      ) {
+        // HTTP/1、HTTP/2 都支持小写 headers
+        request.headers['content-type'] = 'application/x-www-form-urlencoded'
+      }
+      // 为避免指定错误 `content-length` 这里删除该属性，由工具端 (HttpClient) 负责重新计算并赋值
+      if (request.headers) {
+        delete request.headers['Content-Length']
+        delete request.headers['content-length']
+      }
+      let iconv = require('iconv-lite')
+      this.initGotEnv(request)
+      const { url, ..._request } = request
+      this.got[method](url, _request).then(
+        (resp) => {
+          const { statusCode: status, statusCode, headers, rawBody } = resp
+          const body = iconv.decode(rawBody, this.encoding)
+          callback(
+            null,
+            { status, statusCode, headers, rawBody, body },
+            body
+          )
+        },
+        (err) => {
+          const { message: error, response: resp } = err
+          callback(
+            error,
+            resp,
+            resp && iconv.decode(resp.rawBody, this.encoding)
+          )
+        }
+      )
+    }
+    envFormat(envName) {
+      if (this.cookieArr.length) return true
+      if (this.cookie) {
+        for (let sp of this.envSplitor) {
+          if (this.cookie.indexOf(sp) > -1) {
+            this.splitor = sp
+            break
+          }
+        }
+        this.cookie.split(this.splitor).forEach(cookie => this.cookieArr.push(cookie))
+        return true
+      } else {
+        console.log(`\n未填写变量[${envName}]`)
+        return
+      }
+    }
+    /**
+     * 示例:$.time('yyyy-MM-dd qq HH:mm:ss.S')
+     *    :$.time('yyyyMMddHHmmssS')
+     *    y:年 M:月 d:日 q:季 H:时 m:分 s:秒 S:毫秒
+     *    其中y可选0-4位占位符、S可选0-1位占位符，其余可选0-2位占位符
+     * @param {string} fmt 格式化参数
+     * @param {number} 可选: 根据指定时间戳返回格式化日期
+     */
+    time(fmt, ts = null) {
+      const date = ts ? new Date(ts) : new Date()
+      let o = {
+        'M+': date.getMonth() + 1,
+        'd+': date.getDate(),
+        'H+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds(),
+        'q+': Math.floor((date.getMonth() + 3) / 3),
+        'S': date.getMilliseconds()
+      }
+      if (/(y+)/.test(fmt))
+        fmt = fmt.replace(
+          RegExp.$1,
+          (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+        )
+      for (let k in o)
+        if (new RegExp('(' + k + ')').test(fmt))
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length == 1
+              ? o[k]
+              : ('00' + o[k]).substr(('' + o[k]).length)
+          )
+      return fmt
+    }
+    queryStr(opts) {
+      let queryString = ''
+      for (const key in opts) {
+        let value = opts[key]
+        if (value != null && value !== '') {
+          if (typeof value === 'object') {
+            value = JSON.stringify(value)
+          }
+          queryString += `${key}=${value}&`
+        }
+      }
+      queryString = queryString.substring(0, queryString.length - 1)
+      return queryString
+    }
+    log(...logs) {
+      if (logs.length <= 0) return
+      let logPrefix = ''
+      let opt = { console: true }
+      if (logs[logs.length - 1] instanceof Object) Object.assign(opt, logs.pop())
+
+      if (!opt.timeless) {
+        if (opt.time || this.timeFlag) {
+          let fmt = opt.fmt || 'HH:mm:ss'
+          logPrefix = `[${this.time(fmt)}]`
+        }
+      }
+
+      if (!opt.prefixless) {
+        if (opt.prefix || this.threadFlag || this.prefixFlag) {
+          if (this.logPrefix) {
+            logPrefix += this.logPrefix
+          } else {
+            if (this.user) {
+              logPrefix += `账号[${this.user.userIdx}]`
+              if (this.user.nickName) logPrefix += `[${this.user.nickName}]`
+            }
+          }
+
+        }
+      }
+
+      if (opt.logPrefix) {
+        logPrefix = opt.logPrefix
+      }
+
+      logs = logs.map(log => {
+        if (typeof log !== 'string') log = this.toStr(log)
+        return log ? (log.startsWith('\n') ? `\n${logPrefix}${log.substring(1)}` : `${logPrefix}${log}`) : log
+      })
+      if (opt.notify && this.notifyStr) this.notifyStr = [...this.notifyStr, ...logs]
+      if (opt.console) console.log(logs.join(this.logSeparator))
+    }
+    logErr(err) {
+      this.log('', `❗️${this.name}, 错误!`, err.stack)
+    }
+    wait(time) {
+      return new Promise((resolve) => setTimeout(resolve, time))
+    }
+    init(opts = {}) {
+      const { Worker, isMainThread, parentPort, workerData } = require('worker_threads')
+      let {
+        cookie = '',
+        envName = '',
+        configName = '',
+        notifyFlag = true,
+        threadFlag = false,
+        prefixFlag = false,
+        timeFlag = false,
+        DEFAULT_TIMEOUT = 8000,
+        DEFAULT_RETRY = 3,
+      } = opts
+      this.userIdx = 0
+      this.userList = []
+      this.retryNum = DEFAULT_RETRY
+      this.splitor = '@'
+      this.envSplitor = ['@', '\n']
+      this.nickName = ''
+      this.index = ''
+
+      this.cookie = cookie
+      this.cookieArr = []
+
+      this.notifyStr = []
+      this.notifyFlag = notifyFlag
+      this.threadFlag = threadFlag
+      this.prefixFlag = prefixFlag
+      this.timeFlag = timeFlag
+
+      this.envName = envName
+      this.configName = configName
+
+      this.got = this.got ? this.got : require('got')
+      this.got = this.got.extend({
+        retry: { limit: 0 },
+        timeout: DEFAULT_TIMEOUT,
+      })
+
+      this.Worker = Worker
+      this.isMainThread = isMainThread
+      this.parentPort = parentPort
+      this.workerData = workerData
+
+    }
+    async readEnv(opts = {}) {
+      this.init(opts)
+      if (this.cookie) {
+        for (let sp of this.envSplitor) {
+          if (this.cookie.indexOf(sp) > -1) {
+            this.splitor = sp
+            break
+          }
+        }
+        this.cookie.split(this.splitor).forEach(cookie => this.cookieArr.push(cookie))
+
+      } else {
+        const getEnv = require('./utils/config')
+        let config = await getEnv(this.configName)
+        this.cookieArr = config?.token || this.cookieArr
+      }
+
+      for (let cookie of this.cookieArr) {
+        let user = {
+          userIdx: this.cookieArr.indexOf(cookie) + 1,
+          userCookie: cookie,
+          valid: true,
+        }
+        this.userList.push(user)
+      }
+      if (!this.userList.length) {
+        this.log(`\n未填写变量[${envName}]`, { notify: true })
+        return
+      }
+      this.log(`\n共${this.userList.length}个账号`)
+      return true
+    }
+    async request(opt = {}) {
+      let resp = null, count = 0
+      let fn = opt.fn || opt.url
+      let DEFAULT_RETRY = this.retryNum || 3
+      this.got = this.got ? this.got : require('got')
+      opt.method = opt?.method?.toUpperCase() || 'GET'
+      while (count++ < DEFAULT_RETRY) {
+        try {
+          let err = null
+          const errcodes = ['ECONNRESET', 'EADDRINUSE', 'ENOTFOUND', 'EAI_AGAIN']
+          await this.got(opt).then(t => {
+            resp = t
+          }, e => {
+            err = e
+            resp = e.response
+          })
+          if (err) {
+            if (err.name == 'TimeoutError') {
+              this.log(`[${fn}]请求超时(${err.code})，重试第${count}次`)
+            } else if (errcodes.includes(err.code)) {
+              this.log(`[${fn}]请求错误(${err.code})，重试第${count}次`)
+            } else {
+              let statusCode = resp?.statusCode || -1
+              this.log(`[${fn}]请求错误(${err.message}), 返回[${statusCode}]`)
+              break
+            }
+          } else {
+            break
+          }
+        } catch (e) {
+          this.log(`[${fn}]请求错误(${e.message})，重试第${count}次`)
+        }
+      }
+      let { statusCode = -1, headers = null, body = null } = resp
+      if (body) try { body = JSON.parse(body) } catch { };
+      return { statusCode, headers, body }
+    }
+    async http(opts = {}) {
+      let { fn = '', method = 'get', url, headers, body } = opts
+      let options = {
+        fn,
+        method,
+        url,
+        headers
+      }
+      method === 'post' ? options.body = body : ''
+      try {
+        let { body } = await this.request(options)
+        return body
+      } catch (err) {
+        this.logErr(err)
+      }
+    }
+    async sendNotify() {
+      if (!this.notifyStr.length) return
+      try {
+        const notify = require('./utils/sendNotify')
+        console.log('\n------------ 推送 ------------')
+        await notify.sendNotify(this.name, this.notifyStr.join('\n'))
+      } catch (e) {
+
+      }
+    }
+    async threadWorker(user, threads) {
+      return new Promise((resolve) => {
+        let worker = new this.Worker(__filename, {
+          workerData: {
+            user,
+            userList: this.userList,
+          },
+        })
+        worker.on('error', (err) => { throw err })
+        worker.on('exit', async () => {
+          resolve(worker)
+          threads.delete(worker)
+          if (threads.size === 0) {
+            // console.log(`\n线程结束`)
+          }
+        })
+        worker.on('message', (msg) => {
+          this.notifyStr = [...this.notifyStr, ...msg]
+        })
+        threads.add(worker)
+      })
+    }
+    async threads(conf, threads) {
+      while (conf.idx < this.userList.length) {
+        let user = this.userList[conf.idx++]
+        if (!user || !user.valid) return
+        await this.threadWorker(user, threads)
+      }
+    }
+    async threadTask(thread) {
+      this.log(`最大并发数：${thread}`, { prefixSpecial: true })
+      const threads = new Set()
+      let taskConf = { idx: 0 }
+      let taskAll = []
+      while (thread--) taskAll.push(this.threads(taskConf, threads))
+      await Promise.all(taskAll)
+    }
+    async done() {
+      try {
+        if (!this.isMainThread) this.parentPort.postMessage(this.notifyStr)
+      } catch (e) {
+      }
+      if (this.notifyFlag && this.isMainThread) await this.sendNotify()
+      const endTime = new Date().getTime()
+      const costTime = (endTime - this.startTime) / 1000
+      if (this.isMainThread) {
+        this.log(`\n[${this.name}], 结束! 🕛 ${costTime} 秒`, { time: true, prefixless: true })
+        process.exit(1)
+      }
+    }
+  })(name, opts)
+}

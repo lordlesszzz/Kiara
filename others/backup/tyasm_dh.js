@@ -12,7 +12,10 @@ const CryptoJS = require('crypto-js')
 const { Worker, isMainThread, workerData } = require('worker_threads')
 const sign = new Sign()
 
-let cookie = ''
+let cookie = `8937bf806ffa258b56efce6d3db3618c52d4d2f6a9ee8c3123a0588402afb586cb7250237f8f85cf896bd21601811100
+018087c206b194c5e5f2044f155c8f34029b16953f4ded5178b08e53f0fa4994a17dd028146ff70cfb0d0d127b29a05f
+7d6311d2b1244911b8355fe4dfa377b0f3eafe71e1c6caba29c6f93e1b57cb0bbabf8dabca1989556cd1267ee42c8951
+5c0c62f4650e743d0a6c5d0efbb8a338ddd6defc890403a972631b044be9eb4af9e8e60e4d1e6350a0652f475cc7d637`
 let cookieArr = [],
   token = '',
   userList = [],
@@ -21,7 +24,7 @@ let cookieArr = [],
   exchangeList = ['京东E卡50元', '京东E卡10元'],
   reTry = 5
 cookie = cookie || process.env[envName]
-
+exchangeList = ['SMILEY 旅行箱']
 !(async () => {
 
   if (isMainThread) {
@@ -65,6 +68,7 @@ cookie = cookie || process.env[envName]
     $.index = workerData.index
     token = workerData.cookie
     userList = workerData.userList
+    console.log('! / userList:', userList)
     let user = userList[$.index]
     if (!user) return
     $.authToken = user.authToken
@@ -122,6 +126,7 @@ async function asmExchange() {
       method: 'post',
       ...opts
     })
+    console.log('getGoodList / res:', res)
     res = $.toObj(res)
     if (res.success) {
       $.goodList = res.data?.dataList
