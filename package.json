@@ -4,9 +4,12 @@
 		"crypto-js": "^4.1.1",
 		"dotenv": "^16.3.1",
 		"got": "^11.8.6",
+		"hpagent": "^1.2.0",
 		"iconv-lite": "^0.6.3",
 		"node-jsencrypt": "^1.0.0",
+		"node-rsa": "^1.1.1",
 		"request": "^2.88.2",
-		"tough-cookie": "^4.1.2"
+		"tough-cookie": "^4.1.2",
+		"tunnel": "^0.0.6"
 	}
 }

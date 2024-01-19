@@ -7,6 +7,9 @@ export jczp=" 备注 # toekn # memberId  #  备注 # toekn # memberId   "
 
 多账号用 换行 或 @ 分割
 tg频道: https://t.me/yml2213_tg
+
+const $ = new Env("鲸才招聘")
+cron 18 7,19 * * *
 */
 
 const CodeName = "鲸才招聘"
@@ -41,7 +44,7 @@ class User {
   async userTask() {
     await this.do_sign()  // 获取缓存的变量
     await this.info()  // 获取缓存的变量
-
+    
     if (this.cashoutMoney >= 1) {
       await this.withdraw()
     }
