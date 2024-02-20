@@ -9,7 +9,7 @@ export jczp=" 备注 # toekn # memberId  #  备注 # toekn # memberId   "
 tg频道: https://t.me/yml2213_tg
 
 const $ = new Env("鲸才招聘")
-cron 18 7,19 * * *
+cron: 18 7,19 * * *
 */
 
 const CodeName = "鲸才招聘"

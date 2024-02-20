@@ -6,6 +6,7 @@
 		"got": "^11.8.6",
 		"hpagent": "^1.2.0",
 		"iconv-lite": "^0.6.3",
+		"jsrsasign": "^11.1.0",
 		"node-jsencrypt": "^1.0.0",
 		"node-rsa": "^1.1.1",
 		"request": "^2.88.2",
